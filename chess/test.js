@@ -1,6 +1,7 @@
-const { it } = require("node:test");
-const assert = require("node:assert");
+import { it } from "node:test";
+import assert from "node:assert";
+import ChessBoard from "./ChessBoard.js";
 
-it("test test", () => {
-  assert.strictEqual(1, 1)
+it("empty board should have zero pieces", () => {
+  assert.strictEqual(0, new ChessBoard().countPieces())
 });
