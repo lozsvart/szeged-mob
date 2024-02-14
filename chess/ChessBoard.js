@@ -1,7 +1,11 @@
-class ChessBoard{
+class ChessBoard {
+  countPieces() {
+    return 0;
+  }
 
-    countPieces(){
-        return -1
-    }
-} 
-export default ChessBoard
+  countEmptyFields() {
+    return 0;
+  }
+}
+
+export default ChessBoard;

@@ -3,5 +3,9 @@ import assert from "node:assert";
 import ChessBoard from "./ChessBoard.js";
 
 it("empty board should have zero pieces", () => {
-  assert.strictEqual(0, new ChessBoard().countPieces())
+  assert.strictEqual(0, new ChessBoard().countPieces());
+});
+
+it("empty board should have 64 empty fields", () => {
+  assert.strictEqual(64, new ChessBoard().countEmptyFields());
 });
