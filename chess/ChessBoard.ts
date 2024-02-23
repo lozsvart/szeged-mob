@@ -20,6 +20,10 @@ class ChessBoard {
   getMoveOptionCount(location: string) {
     return 14;
   }
+
+  getMoveOptions(location: string) {
+    return []
+  }
 }
 
 export default ChessBoard;

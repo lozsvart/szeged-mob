@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "ts-node test.ts"
+    "test": "ts-node test.ts",
+    "cucumber": "npx cucumber-js features --require features/step_definitions/*.ts --require-module ts-node/register"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@cucumber/cucumber": "^10.3.1",
     "@tsconfig/node21": "^21.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
