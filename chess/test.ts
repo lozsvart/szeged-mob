@@ -56,9 +56,89 @@ describe("rook movement", () => {
     const board = createEmptyBoard();
     putPiece(board, "A1", "Rook");
 
-    assert.strictEqual(board.getMoveOptionCount("A1"), 14)
+    assert.strictEqual(board.getMoveOptionCount("A1"), 14);
   });
+
+  it("should be able to move on to specific fields", () => {
+    const board = createEmptyBoard();
+    putPiece(board, "A1", "Rook");
+    const expectedValue = new Set([
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "A6",
+      "A7",
+      "A8",
+      "B1",
+      "C1",
+      "D1",
+      "E1",
+      "F1",
+      "G1",
+      "H1",
+    ])
+
+    assert.deepStrictEqual(board.getMoveOptions("A1"), expectedValue);
+  });
+
+  it("shouldn't be able to go through another piece in a row", () => {
+
+    const board = createEmptyBoard();
+    putPiece(board, "A1", "Rook");
+    putPiece(board, "F1", "Rook");
+
+    const expectedValue = new Set([
+      "B1",
+      "C1",
+      "D1",
+      "E1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "A6",
+      "A7",
+      "A8",
+    ])
+
+    assert.deepStrictEqual(board.getMoveOptions("A1"), expectedValue);
+
+  })
+
+  it("shouldn't be able to go through another piece in a column", () => {
+
+    const board = createEmptyBoard();
+    putPiece(board, "A1", "Rook");
+    putPiece(board, "A5", "Rook");
+
+    const expectedValue = new Set([
+      "A2",
+      "A3",
+      "A4",
+      "B1",
+      "C1",
+      "D1",
+      "E1",
+      "F1",
+      "G1",
+      "H1",
+    ])
+
+    assert.deepStrictEqual(board.getMoveOptions("A1"), expectedValue);
+  })
+
+  it("shouldn't be able to go through another piece in a row - in a different row", () => {
+    const board = createEmptyBoard();
+    putPiece(board, "A2", "Rook");
+    putPiece(board, "F2", "Rook");
+
+    assert.equal(board.getMoveOptions("A2").size, 11);
+  })
+
 });
+
+
 
 function putPiece(board: ChessBoard, location: string, pieceType: string) {
   board.putPiece(location, pieceType);
