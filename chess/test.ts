@@ -179,7 +179,7 @@ describe("bishop movement", () => {
       shouldNotContain: ["B1", "D1", "C2", "E3", "H6"],
       movingFrom: "C1",
     },
-  ].slice(0, 1).forEach(
+  ].forEach(
     ({
       lightLocations,
       darkLocations,

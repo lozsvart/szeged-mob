@@ -1,7 +1,8 @@
+const rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
+const columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
+
 class ChessBoard {
   pieces: Map<string, Piece>;
-  rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
-  columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
   constructor() {
     this.pieces = new Map();
@@ -29,8 +30,8 @@ class ChessBoard {
 
   getMoveOptions(location: string) {
     const moveOptions = new Set();
-    for (const row of this.rows) {
-      for (const column of this.columns) {
+    for (const row of rows) {
+      for (const column of columns) {
         const targetLocation = column + row;
         if (
           this.canPieceMoveTo(location, targetLocation, this.pieces.get(location)?.type) &&
@@ -53,12 +54,8 @@ class ChessBoard {
     targetLocation: string,
     pieceType?: string
   ) {
-    const [startLocationColumn, startLocationRow] = startLocation.split("");
-    const [targetLocationColumn, targetLocationRow] = targetLocation.split("");
-    const startColumnIndex = this.columns.indexOf(startLocationColumn);
-    const startRowIndex = this.rows.indexOf(startLocationRow);
-    const targetColumnIndex = this.columns.indexOf(targetLocationColumn);
-    const targetRowIndex = this.rows.indexOf(targetLocationRow);
+    const [startColumnIndex, startRowIndex] = toCoordinates(startLocation)
+    const [targetColumnIndex, targetRowIndex] = toCoordinates(targetLocation)
 
     if (pieceType === "Bishop") {
       return Math.abs(startColumnIndex - targetColumnIndex) === Math.abs(startRowIndex - targetRowIndex);
@@ -92,37 +89,39 @@ class ChessBoard {
   }
 
   private getInsideFields(startLocation: string, endLocation: string) {
-    const [startLocationColumn, startLocationRow] = startLocation.split("");
-    const [endLocationColumn, endLocationRow] = endLocation.split("");
-    const startColumnIndex = this.columns.indexOf(startLocationColumn);
-    const startRowIndex = this.rows.indexOf(startLocationRow);
-    const endColumnIndex = this.columns.indexOf(endLocationColumn);
-    const endRowIndex = this.rows.indexOf(endLocationRow);
-
-    const isColumn = startColumnIndex === endColumnIndex;
-    let insideFields: string[] = [];
-    if (isColumn) {
-      const fields = this.rows.map((row) => {
-        return `${startLocationColumn}${row}`;
-      });
-      insideFields = fields.slice(
-        Math.min(startRowIndex, endRowIndex) + 1,
-        Math.max(startRowIndex, endRowIndex)
-      );
+    const [startColumnIndex, startRowIndex] = toCoordinates(startLocation);
+    const [endColumnIndex, endRowIndex] = toCoordinates(endLocation);
+    const [dColumn, dRow] = [endColumnIndex-startColumnIndex, endRowIndex-startRowIndex]
+    const segments = gcd(dColumn, dRow)
+    if (segments === 0) {
+      return []
     }
-    const isRow = startRowIndex === endRowIndex;
-    if (isRow) {
-      const fields = this.columns.map((column) => {
-        return `${column}${startLocationRow}`;
-      });
+    const [dirColumn, dirRow] = [Math.floor(dColumn / segments), Math.floor(dRow / segments)]
 
-      insideFields = fields.slice(
-        Math.min(startColumnIndex, endColumnIndex) + 1,
-        Math.max(startColumnIndex, endColumnIndex)
-      );
+    const result: string[] = []
+    for (let i = 1; i < segments; i++) {
+      result.push(format([startColumnIndex + i * dirColumn, startRowIndex + i * dirRow]))
     }
-    return insideFields;
+    return result
   }
+}
+
+function toCoordinates(location: string) {
+  const [column, row] = location.split("");
+  return [columns.indexOf(column), rows.indexOf(row)]
+}
+
+function format(coordinates: number[]) {
+  return `${columns[coordinates[0]]}${rows[coordinates[1]]}`
+}
+
+function gcd(a: number, b: number) {
+  a = Math.abs(a)
+  b = Math.abs(b)
+  if(a === 0) { return b}
+  if(b === 0) { return a}
+
+  return gcd(b, a % b)
 }
 
 interface Piece {
