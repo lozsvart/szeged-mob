@@ -2,7 +2,7 @@
 
 - [x] Refactor tests - createBoardWithRooks(), parameterized
 - [ ] Other types of pieces
-- [ ] Piece movement
+- [ ] Actually move pieces
 - [ ] Special movements (castling, "ent passant")
 - [ ] Checkmate
 - [ ] Pawn movement (opening) / capture
