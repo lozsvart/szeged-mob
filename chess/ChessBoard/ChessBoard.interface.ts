@@ -10,4 +10,8 @@ export enum PieceType {
 export interface Piece {
   type: string;
   color: "LIGHT" | "DARK";
+  location: string;
+  hasMoved: false;
+
+  canMoveTo(targetLocation: string, context: any): boolean;
 }

@@ -276,53 +276,51 @@ describe("king movement", () => {
 describe("pawn movement", () => {
   [
     {
-      lightLocations: [],
-      darkLocations: ["E5"],
-      shouldContain: ["E4"],
-      shouldNotContain: ["E6"],
-      movingFrom: "E5",
+      lightLocations: ["E4"],
+      darkLocations: ["E6"],
+      shouldContain: ["E5"],
+      shouldNotContain: ["E4", "E6"],
+      movingFrom: "E4",
     },
     {
-      lightLocations: ["E5"],
-      darkLocations: [],
-      shouldContain: ["E6"],
-      shouldNotContain: ["E4"],
-      movingFrom: "E5",
+      lightLocations: ["E4"],
+      darkLocations: ["E6"],
+      shouldContain: ["E5"],
+      shouldNotContain: ["E4", "E6"],
+      movingFrom: "E6",
     },
-    // {
-    //   lightLocations: ["E4"],
-    //   darkLocations: ["E5"],
-    //   shouldContain: [],
-    //   shouldNotContain: [],
-    //   movingFrom: "E5",
-    // },
-  ]
-    .slice(0, 1)
-    .forEach(
-      ({
-        lightLocations,
-        darkLocations,
-        shouldContain,
-        shouldNotContain,
-        movingFrom,
-      }) =>
-        it(`should be able to move from ${movingFrom} to ${shouldContain} fields`, () => {
-          const board = createBoardWithColoredPieces(
-            lightLocations,
-            darkLocations,
-            PieceType.PAWN
-          );
-          const actual = board.getMoveOptions(movingFrom);
+    {
+      lightLocations: ["E4", "D5"],
+      darkLocations: ["F5"],
+      shouldContain: ["F5"],
+      shouldNotContain: ["F3", "D5"],
+      movingFrom: "E4",
+    },
+  ].forEach(
+    ({
+      lightLocations,
+      darkLocations,
+      shouldContain,
+      shouldNotContain,
+      movingFrom,
+    }) =>
+      it(`should be able to move from ${movingFrom} to ${shouldContain} fields`, () => {
+        const board = createBoardWithColoredPieces(
+          lightLocations,
+          darkLocations,
+          PieceType.PAWN
+        );
+        const actual = board.getMoveOptions(movingFrom);
 
-          for (let containedElement of shouldContain) {
-            assert(actual.has(containedElement));
-          }
+        for (let containedElement of shouldContain) {
+          assert(actual.has(containedElement));
+        }
 
-          for (let notContainedElement of shouldNotContain) {
-            assert(!actual.has(notContainedElement));
-          }
-        })
-    );
+        for (let notContainedElement of shouldNotContain) {
+          assert(!actual.has(notContainedElement));
+        }
+      })
+  );
 });
 
 function putPiece(

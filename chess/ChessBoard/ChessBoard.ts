@@ -10,18 +10,14 @@ class ChessBoard {
     this.pieces = new Map();
   }
 
-  countPieces() {
-    return this.pieces.size;
-  }
-
-  countEmptyFields() {
-    return 64 - this.countPieces();
-  }
-
   putPiece(location: string, pieceType?: string, color?: string) {
     const piece: Piece = {
       type: pieceType || "",
       color: color === "dark" ? "DARK" : "LIGHT",
+      location: location,
+      hasMoved: false,
+      canMoveTo: (targetLocation, context) =>
+        this.canPieceMoveTo(piece.location, targetLocation, piece, context),
     };
     this.pieces.set(location, piece);
   }
@@ -33,12 +29,23 @@ class ChessBoard {
   getMoveOptions(location: string) {
     const moveOptions = new Set();
     const piece = this.pieces.get(location);
+    const board = this;
+    const context = {
+      isEmpty(location: string): boolean {
+        return board.isFieldEmpty(location);
+      },
+      hasDifferentlyColoredPiece(location: string, color: string) {
+        return (
+          !this.isEmpty(location) && board.pieces.get(location)?.color !== color
+        );
+      },
+    };
     for (const row of rows) {
       for (const column of columns) {
         const targetLocation = column + row;
         if (
           piece &&
-          this.canPieceMoveTo(location, targetLocation, piece) &&
+          piece.canMoveTo(targetLocation, context) &&
           this.isOpenIntervalEmpty(location, targetLocation) &&
           (this.isFieldEmpty(targetLocation) ||
             this.hasDifferentlyColoredPieces(location, targetLocation))
@@ -54,7 +61,8 @@ class ChessBoard {
   private canPieceMoveTo(
     startLocation: string,
     targetLocation: string,
-    piece: Piece
+    piece: Piece,
+    context: any
   ) {
     const pieceType = piece.type;
     const [startColumnIndex, startRowIndex] = this.toCoordinates(startLocation);
@@ -96,9 +104,23 @@ class ChessBoard {
     }
 
     if (pieceType === PieceType.PAWN) {
+      const hasMoved = piece.hasMoved;
       const signedVerticalOffset = targetRowIndex - startRowIndex;
       const isLight = piece.color === "LIGHT";
-      return horizontalOffset === 0 && signedVerticalOffset === -1;
+      const direction = isLight ? 1 : -1;
+      const movementDistance = hasMoved ? 1 : 2;
+      const isEmpty = context.isEmpty(targetLocation);
+      const isValidVerticalMovement =
+        isEmpty &&
+        horizontalOffset === 0 &&
+        signedVerticalOffset * direction > 0 &&
+        Math.abs(signedVerticalOffset) <= movementDistance;
+      const isValidDiagonalMovement =
+        signedVerticalOffset * direction > 0 &&
+        horizontalOffset === 1 &&
+        verticalOffset === 1 &&
+        context.hasDifferentlyColoredPiece(targetLocation, piece.color);
+      return isValidDiagonalMovement || isValidVerticalMovement;
     }
 
     return false;
