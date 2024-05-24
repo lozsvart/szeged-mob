@@ -2,6 +2,15 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 import ChessBoard, { PieceType } from "./ChessBoard";
 
+function putPiece(
+  board: ChessBoard,
+  location: string,
+  pieceType: PieceType,
+  color: string
+) {
+  board.putPiece(location, pieceType, color);
+}
+
 function createBoardWithColoredPieces(
   lightLocations: string[],
   darkLocations: string[],
@@ -18,28 +27,31 @@ function createBoardWithColoredPieces(
   return board;
 }
 
-describe("rook movement", () => {
+describe("movement", () => {
   [
     {
       lightLocations: ["A1"],
-      darkLocations: [],
       shouldContain: ["A2", "A8", "B1", "H1"],
       shouldNotContain: ["B2", "A1"],
       movingFrom: "A1",
+      pieceType: PieceType.ROOK,
+      description: "",
     },
     {
       lightLocations: ["A1", "F1"],
-      darkLocations: [],
       shouldContain: ["E1"],
       shouldNotContain: ["F1", "G1"],
       movingFrom: "A1",
+      pieceType: PieceType.ROOK,
+      description: "",
     },
     {
       lightLocations: ["A1", "A5"],
-      darkLocations: [],
       shouldContain: ["A4"],
       shouldNotContain: ["A5", "A6"],
       movingFrom: "A1",
+      pieceType: PieceType.ROOK,
+      description: "",
     },
     {
       lightLocations: ["A1"],
@@ -47,163 +59,40 @@ describe("rook movement", () => {
       shouldContain: ["A2"],
       shouldNotContain: ["A3"],
       movingFrom: "A1",
+      pieceType: PieceType.ROOK,
+      description: "",
     },
-  ].forEach(
-    ({
-      lightLocations,
-      darkLocations,
-      shouldContain,
-      shouldNotContain,
-      movingFrom,
-    }) =>
-      it(`should be able to move from ${movingFrom} to ${shouldContain} fields`, () => {
-        const board = createBoardWithColoredPieces(
-          lightLocations,
-          darkLocations,
-          PieceType.ROOK
-        );
-        const actual = board.getMoveOptions(movingFrom);
-
-        for (let containedElement of shouldContain) {
-          assert(actual.has(containedElement));
-        }
-
-        for (let notContainedElement of shouldNotContain) {
-          assert(!actual.has(notContainedElement));
-        }
-      })
-  );
-
-  [
-    { locations: ["A2", "F2"], rookToMove: "A2", moveOptionCount: 11 },
-    { locations: ["A1", "A2"], rookToMove: "A1", moveOptionCount: 7 },
-    { locations: ["F1", "E1"], rookToMove: "F1", moveOptionCount: 9 },
-    { locations: ["F1", "E1", "F5"], rookToMove: "F1", moveOptionCount: 5 },
-    {
-      locations: ["D4", "E3", "E5", "F4", "E4"],
-      rookToMove: "E4",
-      moveOptionCount: 0,
-    },
-  ].forEach(({ locations, rookToMove, moveOptionCount }) =>
-    it(`should return correct move options count when moving ${rookToMove} when there are rooks at ${locations}`, () => {
-      const board = createBoardWithColoredPieces(locations, [], PieceType.ROOK);
-      assert.equal(board.getMoveOptions(rookToMove).size, moveOptionCount);
-    })
-  );
-
-  [
-    {
-      lightLocations: ["A1"],
-      darkLocations: ["A3"],
-      rookToMove: "A1",
-      moveOptionCount: 9,
-    },
-    {
-      lightLocations: ["A3"],
-      darkLocations: ["A1"],
-      rookToMove: "A1",
-      moveOptionCount: 9,
-    },
-  ].forEach(({ lightLocations, darkLocations, rookToMove, moveOptionCount }) =>
-    it(`should return correct move options count when moving ${rookToMove} when there are light rooks at ${lightLocations} and dark rooks at ${darkLocations}`, () => {
-      const board = createBoardWithColoredPieces(
-        lightLocations,
-        darkLocations,
-        PieceType.ROOK
-      );
-
-      assert.equal(board.getMoveOptions(rookToMove).size, moveOptionCount);
-    })
-  );
-});
-
-describe("bishop movement", () => {
-  [
     {
       lightLocations: ["C1"],
-      darkLocations: [],
       shouldContain: ["B2", "A3", "D2", "H6"],
       shouldNotContain: ["B1", "D1", "C2"],
       movingFrom: "C1",
+      pieceType: PieceType.BISHOP,
+      description: "",
     },
     {
       lightLocations: ["C1", "B1", "D2", "C2"],
-      darkLocations: [],
       shouldContain: ["B2", "A3"],
       shouldNotContain: ["B1", "D1", "C2", "E3", "H6"],
       movingFrom: "C1",
+      pieceType: PieceType.BISHOP,
+      description: "",
     },
-  ].forEach(
-    ({
-      lightLocations,
-      darkLocations,
-      shouldContain,
-      shouldNotContain,
-      movingFrom,
-    }) =>
-      it(`should be able to move from ${movingFrom} to ${shouldContain} fields`, () => {
-        const board = createBoardWithColoredPieces(
-          lightLocations,
-          darkLocations,
-          PieceType.BISHOP
-        );
-        const actual = board.getMoveOptions(movingFrom);
-
-        for (let containedElement of shouldContain) {
-          assert(actual.has(containedElement));
-        }
-
-        for (let notContainedElement of shouldNotContain) {
-          assert(!actual.has(notContainedElement));
-        }
-      })
-  );
-});
-
-describe("queen movement", () => {
-  [
     {
       lightLocations: ["A1"],
-      darkLocations: [],
       shouldContain: ["A8", "H1", "H8", "A2", "B2", "B1"],
       shouldNotContain: ["B3", "C2", "H2", "B8", "H7", "G8"],
       movingFrom: "A1",
+      pieceType: PieceType.QUEEN,
+      description: "",
     },
-  ].forEach(
-    ({
-      lightLocations,
-      darkLocations,
-      shouldContain,
-      shouldNotContain,
-      movingFrom,
-    }) =>
-      it(`should be able to move from ${movingFrom} to ${shouldContain} fields`, () => {
-        const board = createBoardWithColoredPieces(
-          lightLocations,
-          darkLocations,
-          PieceType.QUEEN
-        );
-        const actual = board.getMoveOptions(movingFrom);
-
-        for (let containedElement of shouldContain) {
-          assert(actual.has(containedElement));
-        }
-
-        for (let notContainedElement of shouldNotContain) {
-          assert(!actual.has(notContainedElement));
-        }
-      })
-  );
-});
-
-describe("knight movement", () => {
-  [
     {
       lightLocations: ["C3"],
-      darkLocations: [],
       shouldContain: ["A4", "A2", "B5", "D5", "E4", "E2", "B1", "D1"],
       movingFrom: "C3",
       movementOptionCount: 8,
+      pieceType: PieceType.KNIGHT,
+      description: "",
     },
     {
       lightLocations: ["C3", "A4"],
@@ -211,125 +100,123 @@ describe("knight movement", () => {
       shouldContain: ["D5", "B5"],
       movingFrom: "C3",
       movementOptionCount: 7,
+      pieceType: PieceType.KNIGHT,
+      description: "",
     },
-  ].forEach(
-    ({
-      lightLocations,
-      darkLocations,
-      shouldContain,
-      movingFrom,
-      movementOptionCount,
-    }) =>
-      it(`should be able to move from ${movingFrom} to ${shouldContain} fields`, () => {
-        const board = createBoardWithColoredPieces(
-          lightLocations,
-          darkLocations,
-          PieceType.KNIGHT
-        );
-        const actual = board.getMoveOptions(movingFrom);
-
-        for (let containedElement of shouldContain) {
-          assert(actual.has(containedElement));
-        }
-
-        assert(actual.size === movementOptionCount);
-      })
-  );
-});
-
-describe("king movement", () => {
-  [
     {
       lightLocations: ["E5", "D4", "E4", "F4"],
-      darkLocations: [],
       shouldContain: ["F5", "F6", "E6", "D6", "D5"],
       shouldNotContain: ["E5", "D4", "E4", "F4", "G5", "C7", "D3"],
       movingFrom: "E5",
+      pieceType: PieceType.KING,
+      description: "",
     },
-  ].forEach(
-    ({
-      lightLocations,
-      darkLocations,
-      shouldContain,
-      shouldNotContain,
-      movingFrom,
-    }) =>
-      it(`should be able to move from ${movingFrom} to ${shouldContain} fields`, () => {
-        const board = createBoardWithColoredPieces(
-          lightLocations,
-          darkLocations,
-          PieceType.KING
-        );
-        const actual = board.getMoveOptions(movingFrom);
-
-        for (let containedElement of shouldContain) {
-          assert(actual.has(containedElement));
-        }
-
-        for (let notContainedElement of shouldNotContain) {
-          assert(!actual.has(notContainedElement));
-        }
-      })
-  );
-});
-
-describe("pawn movement", () => {
-  [
     {
-      lightLocations: [],
+      lightLocations: ["A2", "F2"],
+      movingFrom: "A2",
+      movementOptionCount: 11,
+      pieceType: PieceType.ROOK,
+      description: "",
+    },
+    {
+      lightLocations: ["A1", "A2"],
+      movingFrom: "A1",
+      movementOptionCount: 7,
+      pieceType: PieceType.ROOK,
+      description: "",
+    },
+    {
+      lightLocations: ["F1", "E1"],
+      movingFrom: "F1",
+      movementOptionCount: 9,
+      pieceType: PieceType.ROOK,
+      description: "",
+    },
+    {
+      lightLocations: ["F1", "E1", "F5"],
+      movingFrom: "F1",
+      movementOptionCount: 5,
+      pieceType: PieceType.ROOK,
+      description: "",
+    },
+    {
+      lightLocations: ["D4", "E3", "E5", "F4", "E4"],
+      movingFrom: "E4",
+      movementOptionCount: 0,
+      pieceType: PieceType.ROOK,
+      description: "",
+    },
+    {
       darkLocations: ["E5"],
       shouldContain: ["E4"],
       shouldNotContain: ["E6"],
       movingFrom: "E5",
+      pieceType: PieceType.PAWN,
+      description: "",
     },
     {
       lightLocations: ["E5"],
-      darkLocations: [],
       shouldContain: ["E6"],
       shouldNotContain: ["E4"],
       movingFrom: "E5",
+      pieceType: PieceType.PAWN,
+      description: "",
     },
-    // {
-    //   lightLocations: ["E4"],
-    //   darkLocations: ["E5"],
-    //   shouldContain: [],
-    //   shouldNotContain: [],
-    //   movingFrom: "E5",
-    // },
-  ]
-    .slice(0, 1)
-    .forEach(
-      ({
-        lightLocations,
-        darkLocations,
-        shouldContain,
-        shouldNotContain,
-        movingFrom,
-      }) =>
-        it(`should be able to move from ${movingFrom} to ${shouldContain} fields`, () => {
-          const board = createBoardWithColoredPieces(
-            lightLocations,
-            darkLocations,
-            PieceType.PAWN
+    {
+      lightLocations: ["E4"],
+      darkLocations: ["E5"],
+      movingFrom: "E5",
+      movementOptionCount: 0,
+      pieceType: PieceType.PAWN,
+      description: "",
+    },
+    {
+      lightLocations: ["E4"],
+      darkLocations: ["D5"],
+      movingFrom: "E4",
+      shouldContain: ["D5", "E5"],
+      pieceType: PieceType.PAWN,
+      description: "",
+    },
+  ].forEach(
+    ({
+      lightLocations = [],
+      darkLocations = [],
+      shouldContain = [],
+      shouldNotContain = [],
+      movingFrom,
+      pieceType,
+      movementOptionCount,
+      description,
+    }) =>
+      it(`${pieceType} should be able to move from ${movingFrom} to ${shouldContain} fields, ${description}`, () => {
+        const board = createBoardWithColoredPieces(
+          lightLocations,
+          darkLocations,
+          pieceType
+        );
+        const actual = board.getMoveOptions(movingFrom);
+
+        for (let containedElement of shouldContain) {
+          assert(
+            actual.has(containedElement),
+            `${containedElement} should be a valid movement`
           );
-          const actual = board.getMoveOptions(movingFrom);
+        }
 
-          for (let containedElement of shouldContain) {
-            assert(actual.has(containedElement));
-          }
+        for (let notContainedElement of shouldNotContain) {
+          assert(
+            !actual.has(notContainedElement),
+            `${notContainedElement} should NOT be a valid movement`
+          );
+        }
 
-          for (let notContainedElement of shouldNotContain) {
-            assert(!actual.has(notContainedElement));
-          }
-        })
-    );
+        if (movementOptionCount === 0 || movementOptionCount) {
+          assert(
+            actual.size === movementOptionCount,
+            `There should be ${movementOptionCount} movement options, but received ${actual.size}`
+          );
+        }
+      })
+  );
 });
-
-function putPiece(
-  board: ChessBoard,
-  location: string,
-  pieceType: PieceType,
-  color: string
-) {
-  board.putPiece(location, pieceType, color);
-}

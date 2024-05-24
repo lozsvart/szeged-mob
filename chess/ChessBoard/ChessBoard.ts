@@ -96,9 +96,20 @@ class ChessBoard {
     }
 
     if (pieceType === PieceType.PAWN) {
-      const signedVerticalOffset = targetRowIndex - startRowIndex;
       const isLight = piece.color === "LIGHT";
-      return horizontalOffset === 0 && signedVerticalOffset === -1;
+      const signedVerticalOffset = targetRowIndex - startRowIndex;
+      const isCorrectDirection = isLight
+        ? signedVerticalOffset === 1
+        : signedVerticalOffset === -1;
+      const isTargetLocationEmpty = this.isFieldEmpty(targetLocation);
+      const isValidDiagonalMove =
+        horizontalOffset === 1 && !isTargetLocationEmpty;
+      const isValidVerticalMovement =
+        horizontalOffset === 0 && isTargetLocationEmpty;
+
+      return (
+        (isValidVerticalMovement || isValidDiagonalMove) && isCorrectDirection
+      );
     }
 
     return false;
