@@ -178,6 +178,14 @@ describe("movement", () => {
       pieceType: PieceType.PAWN,
       description: "",
     },
+    {
+      lightLocations: ["A2"],
+      movingFrom: "A2",
+      shouldContain: ["A4"],
+      shouldNotContain: ["A5"],
+      pieceType: PieceType.PAWN,
+      description: "",
+    },
   ].forEach(
     ({
       lightLocations = [],

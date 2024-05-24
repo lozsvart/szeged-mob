@@ -101,15 +101,18 @@ class ChessBoard {
       const isCorrectDirection = isLight
         ? signedVerticalOffset === 1
         : signedVerticalOffset === -1;
+      const verticalDirection = isLight ? 1 : -1;
       const isTargetLocationEmpty = this.isFieldEmpty(targetLocation);
       const isValidDiagonalMove =
-        horizontalOffset === 1 && !isTargetLocationEmpty;
+        horizontalOffset === 1 && !isTargetLocationEmpty && isCorrectDirection;
+      const isInitialMove = isLight ? startRowIndex === 1 : startRowIndex === 6;
       const isValidVerticalMovement =
-        horizontalOffset === 0 && isTargetLocationEmpty;
+        horizontalOffset === 0 &&
+        isTargetLocationEmpty &&
+        verticalDirection * signedVerticalOffset > 0 &&
+        verticalOffset <= (isInitialMove ? 2 : 1);
 
-      return (
-        (isValidVerticalMovement || isValidDiagonalMove) && isCorrectDirection
-      );
+      return isValidVerticalMovement || isValidDiagonalMove;
     }
 
     return false;
