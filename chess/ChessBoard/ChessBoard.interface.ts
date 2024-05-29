@@ -11,3 +11,5 @@ export interface Piece {
   type: string;
   color: "LIGHT" | "DARK";
 }
+
+export class MovementError extends Error {}

@@ -1,4 +1,4 @@
-import { Piece, PieceType } from "./ChessBoard.interface";
+import { MovementError, Piece, PieceType } from "./ChessBoard.interface";
 
 const rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -12,10 +12,6 @@ class ChessBoard {
 
   countPieces() {
     return this.pieces.size;
-  }
-
-  countEmptyFields() {
-    return 64 - this.countPieces();
   }
 
   putPiece(location: string, pieceType?: string, color?: string) {
@@ -49,6 +45,14 @@ class ChessBoard {
     }
 
     return moveOptions;
+  }
+
+  movePiece(startLocation: string, targetLocation: string) {
+    if (!this.getMoveOptions(startLocation).has(targetLocation)) {
+      throw new MovementError();
+    }
+    this.pieces.set(targetLocation, this.pieces.get(startLocation) as Piece);
+    this.pieces.delete(startLocation);
   }
 
   private canPieceMoveTo(

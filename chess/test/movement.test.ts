@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import ChessBoard, { PieceType } from "./ChessBoard";
+import ChessBoard, { PieceType, MovementError } from "../ChessBoard";
 
 function putPiece(
   board: ChessBoard,
@@ -27,7 +27,7 @@ function createBoardWithColoredPieces(
   return board;
 }
 
-describe("movement", () => {
+describe("Movement Calculations", () => {
   [
     {
       lightLocations: ["A1"],
@@ -240,3 +240,41 @@ describe("movement", () => {
       })
   );
 });
+
+describe("Piece Movements", () => {
+  it("Moving a piece should not change pieceCount", () => {
+    const board = createBoardWithColoredPieces(["A1"], [], PieceType.ROOK);
+    board.movePiece("A1", "A3");
+    assert(board.countPieces() === 1, "The board should have 1 piece on it");
+  });
+
+  it("Moving a piece from an empty field should throw an exception", () => {
+    const board = createBoardWithColoredPieces([], [], PieceType.ROOK);
+    assert.throws(
+      () => board.movePiece("A1", "A3"),
+      MovementError,
+      "Movement from an empty field should not be allowed"
+    );
+  });
+
+  it("Should throw an exception when trying to move onto a piece with the same color", () => {
+    const board = createBoardWithColoredPieces(
+      ["A1", "A3"],
+      [],
+      PieceType.ROOK
+    );
+    assert.throws(
+      () => board.movePiece("A1", "A3"),
+      MovementError,
+      "Movement onto a piece with the same should not be allowed"
+    );
+  });
+
+  it("Should allow capturing another piece with a different color", () => {
+    const board = createBoardWithColoredPieces(["A1"], ["A3"], PieceType.ROOK);
+    board.movePiece("A1", "A3");
+    assert(board.countPieces() === 1, "The board should have 1 piece on it");
+  });
+});
+
+describe("Special Movements", () => {});

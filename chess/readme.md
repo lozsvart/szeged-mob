@@ -5,7 +5,8 @@
 - [x] Add other types of pieces
 - [x] Unionize movement tests
 - [x] Pawn movement (opening / capture)
-- [ ] Actually move pieces
+- [x] Actually move pieces
 - [ ] Special movements (castling, "en passant")
 - [ ] Check and checkmate checking
 - [ ] Pawn promotion
+- [ ] Use polymorphism for piece movement
