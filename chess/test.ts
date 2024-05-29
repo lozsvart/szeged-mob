@@ -35,7 +35,7 @@ describe("movement", () => {
       shouldNotContain: ["B2", "A1"],
       movingFrom: "A1",
       pieceType: PieceType.ROOK,
-      description: "",
+      description: "Rook should be able to move parallel to axes",
     },
     {
       lightLocations: ["A1", "F1"],
@@ -43,7 +43,8 @@ describe("movement", () => {
       shouldNotContain: ["F1", "G1"],
       movingFrom: "A1",
       pieceType: PieceType.ROOK,
-      description: "",
+      description:
+        "Rook should not be able to jump on or over piece with same color",
     },
     {
       lightLocations: ["A1", "A5"],
@@ -51,7 +52,8 @@ describe("movement", () => {
       shouldNotContain: ["A5", "A6"],
       movingFrom: "A1",
       pieceType: PieceType.ROOK,
-      description: "",
+      description:
+        "Rook should not be able to jump on or over piece with same color",
     },
     {
       lightLocations: ["A1"],
@@ -60,7 +62,8 @@ describe("movement", () => {
       shouldNotContain: ["A3"],
       movingFrom: "A1",
       pieceType: PieceType.ROOK,
-      description: "",
+      description:
+        "Rook should be able to capture, but not jump over enemy pieces",
     },
     {
       lightLocations: ["C1"],
@@ -68,7 +71,7 @@ describe("movement", () => {
       shouldNotContain: ["B1", "D1", "C2"],
       movingFrom: "C1",
       pieceType: PieceType.BISHOP,
-      description: "",
+      description: "Bishop should be able to move diagonally",
     },
     {
       lightLocations: ["C1", "B1", "D2", "C2"],
@@ -76,7 +79,8 @@ describe("movement", () => {
       shouldNotContain: ["B1", "D1", "C2", "E3", "H6"],
       movingFrom: "C1",
       pieceType: PieceType.BISHOP,
-      description: "",
+      description:
+        "Bishop should not be able to jump on or over pieces with same color",
     },
     {
       lightLocations: ["A1"],
@@ -84,7 +88,8 @@ describe("movement", () => {
       shouldNotContain: ["B3", "C2", "H2", "B8", "H7", "G8"],
       movingFrom: "A1",
       pieceType: PieceType.QUEEN,
-      description: "",
+      description:
+        "Queen should be able to move parallel to axes or diagonally",
     },
     {
       lightLocations: ["C3"],
@@ -92,7 +97,8 @@ describe("movement", () => {
       movingFrom: "C3",
       movementOptionCount: 8,
       pieceType: PieceType.KNIGHT,
-      description: "",
+      description:
+        "Knight should be able to move 1 square horizontally, 2 vertically or vice versa",
     },
     {
       lightLocations: ["C3", "A4"],
@@ -101,7 +107,8 @@ describe("movement", () => {
       movingFrom: "C3",
       movementOptionCount: 7,
       pieceType: PieceType.KNIGHT,
-      description: "",
+      description:
+        "Knight should be able to jump over pieces but not on piece with same color",
     },
     {
       lightLocations: ["E5", "D4", "E4", "F4"],
@@ -109,42 +116,44 @@ describe("movement", () => {
       shouldNotContain: ["E5", "D4", "E4", "F4", "G5", "C7", "D3"],
       movingFrom: "E5",
       pieceType: PieceType.KING,
-      description: "",
+      description:
+        "King should be able to move to adjacent squares, but not on pieces with same color",
     },
     {
       lightLocations: ["A2", "F2"],
       movingFrom: "A2",
       movementOptionCount: 11,
       pieceType: PieceType.ROOK,
-      description: "",
+      description: "Rook should not be able to jump over pieces",
     },
     {
       lightLocations: ["A1", "A2"],
       movingFrom: "A1",
       movementOptionCount: 7,
       pieceType: PieceType.ROOK,
-      description: "",
+      description: "Rook should not be able to jump over pieces",
     },
     {
       lightLocations: ["F1", "E1"],
       movingFrom: "F1",
       movementOptionCount: 9,
       pieceType: PieceType.ROOK,
-      description: "",
+      description: "Rook should not be able to jump over pieces",
     },
     {
       lightLocations: ["F1", "E1", "F5"],
       movingFrom: "F1",
       movementOptionCount: 5,
       pieceType: PieceType.ROOK,
-      description: "",
+      description: "Rook should not be able to jump over pieces",
     },
     {
       lightLocations: ["D4", "E3", "E5", "F4", "E4"],
       movingFrom: "E4",
       movementOptionCount: 0,
       pieceType: PieceType.ROOK,
-      description: "",
+      description:
+        "Rook should not be able to jump over pieces in any direction",
     },
     {
       darkLocations: ["E5"],
@@ -152,7 +161,7 @@ describe("movement", () => {
       shouldNotContain: ["E6"],
       movingFrom: "E5",
       pieceType: PieceType.PAWN,
-      description: "",
+      description: "Dark pawn should not be able to move down, but not up",
     },
     {
       lightLocations: ["E5"],
@@ -160,7 +169,7 @@ describe("movement", () => {
       shouldNotContain: ["E4"],
       movingFrom: "E5",
       pieceType: PieceType.PAWN,
-      description: "",
+      description: "Light pawn should be able to move up, but not down",
     },
     {
       lightLocations: ["E4"],
@@ -168,7 +177,8 @@ describe("movement", () => {
       movingFrom: "E5",
       movementOptionCount: 0,
       pieceType: PieceType.PAWN,
-      description: "",
+      description:
+        "Pawn should not be able to move when blocked by a piece in front of it",
     },
     {
       lightLocations: ["E4"],
@@ -176,7 +186,8 @@ describe("movement", () => {
       movingFrom: "E4",
       shouldContain: ["D5", "E5"],
       pieceType: PieceType.PAWN,
-      description: "",
+      description:
+        "Pawn should be able to either move forward or capture diagonally",
     },
     {
       lightLocations: ["A2"],
@@ -184,7 +195,8 @@ describe("movement", () => {
       shouldContain: ["A4"],
       shouldNotContain: ["A5"],
       pieceType: PieceType.PAWN,
-      description: "",
+      description:
+        "Pawn should be able to move forward two squares from the starting position",
     },
   ].forEach(
     ({
@@ -197,7 +209,7 @@ describe("movement", () => {
       movementOptionCount,
       description,
     }) =>
-      it(`${pieceType} should be able to move from ${movingFrom} to ${shouldContain} fields, ${description}`, () => {
+      it(`${description}`, () => {
         const board = createBoardWithColoredPieces(
           lightLocations,
           darkLocations,
