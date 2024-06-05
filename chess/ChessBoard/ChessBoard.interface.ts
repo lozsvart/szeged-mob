@@ -7,9 +7,11 @@ export enum PieceType {
   PAWN = "Pawn",
 }
 
+export type PieceColor = "LIGHT" | "DARK";
+
 export interface Piece {
   type: string;
-  color: "LIGHT" | "DARK";
+  color: PieceColor;
 }
 
 export class MovementError extends Error {}

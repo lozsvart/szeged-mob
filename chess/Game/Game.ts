@@ -9,14 +9,14 @@ class Game {
   constructor() {
     this.#board = new ChessBoard();
     const startPieces: Record<string, Piece> = {
-      A1: { type: PieceType.PAWN, color: "LIGHT" },
-      B1: { type: PieceType.PAWN, color: "LIGHT" },
-      C1: { type: PieceType.PAWN, color: "LIGHT" },
-      D1: { type: PieceType.PAWN, color: "LIGHT" },
-      E1: { type: PieceType.PAWN, color: "LIGHT" },
-      F1: { type: PieceType.PAWN, color: "LIGHT" },
-      G1: { type: PieceType.PAWN, color: "LIGHT" },
-      H1: { type: PieceType.PAWN, color: "LIGHT" },
+      A1: { type: PieceType.ROOK, color: "LIGHT" },
+      B1: { type: PieceType.KNIGHT, color: "LIGHT" },
+      C1: { type: PieceType.BISHOP, color: "LIGHT" },
+      D1: { type: PieceType.QUEEN, color: "LIGHT" },
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      F1: { type: PieceType.BISHOP, color: "LIGHT" },
+      G1: { type: PieceType.KNIGHT, color: "LIGHT" },
+      H1: { type: PieceType.ROOK, color: "LIGHT" },
       A2: { type: PieceType.PAWN, color: "LIGHT" },
       B2: { type: PieceType.PAWN, color: "LIGHT" },
       C2: { type: PieceType.PAWN, color: "LIGHT" },
@@ -25,10 +25,26 @@ class Game {
       F2: { type: PieceType.PAWN, color: "LIGHT" },
       G2: { type: PieceType.PAWN, color: "LIGHT" },
       H2: { type: PieceType.PAWN, color: "LIGHT" },
+      A8: { type: PieceType.ROOK, color: "DARK" },
+      B8: { type: PieceType.KNIGHT, color: "DARK" },
+      C8: { type: PieceType.BISHOP, color: "DARK" },
+      D8: { type: PieceType.QUEEN, color: "DARK" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      F8: { type: PieceType.BISHOP, color: "DARK" },
+      G8: { type: PieceType.KNIGHT, color: "DARK" },
+      H8: { type: PieceType.ROOK, color: "DARK" },
+      A7: { type: PieceType.PAWN, color: "DARK" },
+      B7: { type: PieceType.PAWN, color: "DARK" },
+      C7: { type: PieceType.PAWN, color: "DARK" },
+      D7: { type: PieceType.PAWN, color: "DARK" },
+      E7: { type: PieceType.PAWN, color: "DARK" },
+      F7: { type: PieceType.PAWN, color: "DARK" },
+      G7: { type: PieceType.PAWN, color: "DARK" },
+      H7: { type: PieceType.PAWN, color: "DARK" },
     };
-    this.#board.putPiece("C2", PieceType.PAWN);
-    this.#board.putPiece("D2", PieceType.PAWN);
-    this.#board.putPiece("D7", PieceType.PAWN, "dark");
+    for (let [location, piece] of Object.entries(startPieces)) {
+      this.#board.putPiece(location, piece.type, piece.color);
+    }
   }
 
   move(startLocation: string, targetLocation: string) {
