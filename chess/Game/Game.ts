@@ -43,7 +43,7 @@ class Game {
     });
   }
 
-  private constructor(startPieces: Partial<Record<Location, Piece>>) {
+  constructor(startPieces: Partial<Record<Location, Piece>>) {
     this.#board = new ChessBoard();
     for (let [location, piece] of Object.entries(startPieces)) {
       this.#board.putPiece(location as Location, piece.type, piece.color);

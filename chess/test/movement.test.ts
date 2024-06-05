@@ -4,13 +4,15 @@ import ChessBoard, {
   PieceType,
   MovementError,
   PieceColor,
+  Location,
+  Piece,
 } from "../ChessBoard";
 import Game from "../Game";
 import { TurnError } from "../Game/Game";
 
 function putPiece(
   board: ChessBoard,
-  location: string,
+  location: Location,
   pieceType: PieceType,
   color: PieceColor
 ) {
@@ -18,8 +20,8 @@ function putPiece(
 }
 
 function createBoardWithColoredPieces(
-  lightLocations: string[],
-  darkLocations: string[],
+  lightLocations: Location[],
+  darkLocations: Location[],
   pieceType: PieceType
 ) {
   const board = new ChessBoard();
@@ -32,6 +34,10 @@ function createBoardWithColoredPieces(
 
   return board;
 }
+
+const createGameWithColoredPieces = (
+  pieces: Partial<Record<Location, Piece>>
+) => new Game(pieces);
 
 describe("Board Movement", () => {
   [
@@ -217,11 +223,11 @@ describe("Board Movement", () => {
     }) =>
       it(`${description}`, () => {
         const board = createBoardWithColoredPieces(
-          lightLocations,
-          darkLocations,
+          lightLocations as Array<Location>,
+          darkLocations as Array<Location>,
           pieceType
         );
-        const actual = board.getMoveOptions(movingFrom);
+        const actual = board.getMoveOptions(movingFrom as Location);
 
         for (let containedElement of shouldContain) {
           assert(
