@@ -304,5 +304,12 @@ describe("Turns", () => {
 
   it("Movement should be reflected in the next turn", () => {
     const game = new Game();
+    game.move("D2", "D3");
+
+    assert.throws(
+      () => game.move("D2", "D3"),
+      MovementError,
+      "There should be no pieces on D2"
+    );
   });
 });
