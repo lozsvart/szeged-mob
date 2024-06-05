@@ -4,14 +4,18 @@ const rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 class ChessBoard {
-  pieces: Map<string, Piece>;
+  #pieces: Map<string, Piece>;
+
+  getPiece(location: string) {
+    return this.#pieces.get(location);
+  }
 
   constructor() {
-    this.pieces = new Map();
+    this.#pieces = new Map();
   }
 
   countPieces() {
-    return this.pieces.size;
+    return this.#pieces.size;
   }
 
   putPiece(location: string, pieceType?: string, color?: string) {
@@ -19,7 +23,7 @@ class ChessBoard {
       type: pieceType || "",
       color: color === "dark" ? "DARK" : "LIGHT",
     };
-    this.pieces.set(location, piece);
+    this.#pieces.set(location, piece);
   }
 
   getMoveOptionCount(location: string) {
@@ -28,7 +32,7 @@ class ChessBoard {
 
   getMoveOptions(location: string) {
     const moveOptions = new Set();
-    const piece = this.pieces.get(location);
+    const piece = this.#pieces.get(location);
     for (const row of rows) {
       for (const column of columns) {
         const targetLocation = column + row;
@@ -51,8 +55,8 @@ class ChessBoard {
     if (!this.getMoveOptions(startLocation).has(targetLocation)) {
       throw new MovementError();
     }
-    this.pieces.set(targetLocation, this.pieces.get(startLocation) as Piece);
-    this.pieces.delete(startLocation);
+    this.#pieces.set(targetLocation, this.#pieces.get(startLocation) as Piece);
+    this.#pieces.delete(startLocation);
   }
 
   private canPieceMoveTo(
@@ -130,13 +134,13 @@ class ChessBoard {
   }
 
   private hasDifferentlyColoredPieces(locationA: string, locationB: string) {
-    let pieceA = this.pieces.get(locationA);
-    let pieceB = this.pieces.get(locationB);
+    let pieceA = this.#pieces.get(locationA);
+    let pieceB = this.#pieces.get(locationB);
     return pieceA?.color !== pieceB?.color;
   }
 
   private isFieldEmpty(location: string): boolean {
-    return !this.pieces.get(location);
+    return !this.#pieces.get(location);
   }
 
   private isOpenIntervalEmpty(startLocation: string, endLocation: string) {

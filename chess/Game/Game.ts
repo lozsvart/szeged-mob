@@ -1,4 +1,4 @@
-import ChessBoard from "../ChessBoard";
+import ChessBoard, { PieceType } from "../ChessBoard";
 
 export class TurnError extends Error {}
 
@@ -8,6 +8,8 @@ class Game {
 
   constructor() {
     this.board = new ChessBoard();
+    this.board.putPiece("D2", PieceType.PAWN);
+    this.board.putPiece("D7", PieceType.PAWN, "dark");
   }
 
   move(startLocation: string, targetLocation: string) {
