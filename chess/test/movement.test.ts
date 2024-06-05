@@ -283,15 +283,22 @@ describe("Special Movements", () => {});
 
 describe("Turns", () => {
   it("Black should not be allowed to start the game", () => {
-    // Given a game without any movements
     const game = new Game();
 
-    // When I try to move a black piece
-    // Then it should not move the black piece
     assert.throws(
       () => game.move("D7", "D6"),
       TurnError,
       "Black should not be allowed to move at the start"
+    );
+  });
+
+  it("White should be able to move at the start of the game", () => {
+    const game = new Game();
+
+    assert.doesNotThrow(
+      () => game.move("D2", "D3"),
+      TurnError,
+      "White should be able to move at the start of the game"
     );
   });
 });
