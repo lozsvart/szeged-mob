@@ -327,5 +327,11 @@ describe("Turns", () => {
       TurnError,
       "Black should be able to move in the second turn"
     );
+
+    assert.doesNotThrow(
+      () => game.move("C2", "C3"),
+      TurnError,
+      "White should be able to move in the third turn"
+    );
   });
 });

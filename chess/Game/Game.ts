@@ -8,6 +8,7 @@ class Game {
 
   constructor() {
     this.#board = new ChessBoard();
+    this.#board.putPiece("C2", PieceType.PAWN);
     this.#board.putPiece("D2", PieceType.PAWN);
     this.#board.putPiece("D7", PieceType.PAWN, "dark");
   }
