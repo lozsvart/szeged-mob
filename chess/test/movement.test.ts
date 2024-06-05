@@ -301,4 +301,8 @@ describe("Turns", () => {
       "White should be able to move at the start of the game"
     );
   });
+
+  it("Movement should be reflected in the next turn", () => {
+    const game = new Game();
+  });
 });
