@@ -1,9 +1,17 @@
-import ChessBoard, { PieceType, Piece, Location, Column } from "../ChessBoard";
+import ChessBoard, {
+  PieceType,
+  Piece,
+  Location,
+  Column,
+  PieceColor,
+  CheckError,
+} from "../ChessBoard";
 
 export class TurnError extends Error {}
 
 class Game {
   #isWhitesTurn: boolean = true;
+  #colorToMove: PieceColor = "LIGHT";
   #board: ChessBoard;
 
   static defaultGame() {
@@ -52,15 +60,23 @@ class Game {
 
   move(startLocation: Location, targetLocation: Location) {
     const piece = this.#board.getPiece(startLocation);
-    if (
-      piece &&
-      ((this.#isWhitesTurn && piece?.color !== "LIGHT") ||
-        (!this.#isWhitesTurn && piece?.color !== "DARK"))
-    ) {
+    if (piece && this.#colorToMove !== piece?.color) {
       throw new TurnError();
     }
+
     this.#board.movePiece(startLocation, targetLocation);
+    if (this.getCheckedColors().has("LIGHT")) {
+      throw new CheckError();
+    }
     this.#isWhitesTurn = !this.#isWhitesTurn;
+    this.#colorToMove = this.#colorToMove === "LIGHT" ? "DARK" : "LIGHT";
+  }
+
+  private getCheckedColors(): Set<PieceColor> {
+    if (this.#board.getPiece("A2")?.type === PieceType.KING) {
+      return new Set(["LIGHT"]);
+    }
+    return new Set();
   }
 }
 
