@@ -6,9 +6,8 @@ class Game {
   #isWhitesTurn: boolean = true;
   #board: ChessBoard;
 
-  constructor() {
-    this.#board = new ChessBoard();
-    const startPieces: Record<string, Piece> = {
+  static defaultGame() {
+    return new Game({
       A1: { type: PieceType.ROOK, color: "LIGHT" },
       B1: { type: PieceType.KNIGHT, color: "LIGHT" },
       C1: { type: PieceType.BISHOP, color: "LIGHT" },
@@ -41,7 +40,11 @@ class Game {
       F7: { type: PieceType.PAWN, color: "DARK" },
       G7: { type: PieceType.PAWN, color: "DARK" },
       H7: { type: PieceType.PAWN, color: "DARK" },
-    };
+    });
+  }
+
+  private constructor(startPieces: Record<string, Piece>) {
+    this.#board = new ChessBoard();
     for (let [location, piece] of Object.entries(startPieces)) {
       this.#board.putPiece(location, piece.type, piece.color);
     }

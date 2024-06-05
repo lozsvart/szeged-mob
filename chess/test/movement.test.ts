@@ -1,6 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import ChessBoard, { PieceType, MovementError } from "../ChessBoard";
+import ChessBoard, {
+  PieceType,
+  MovementError,
+  PieceColor,
+} from "../ChessBoard";
 import Game from "../Game";
 import { TurnError } from "../Game/Game";
 
@@ -8,7 +12,7 @@ function putPiece(
   board: ChessBoard,
   location: string,
   pieceType: PieceType,
-  color: string
+  color: PieceColor
 ) {
   board.putPiece(location, pieceType, color);
 }
@@ -20,10 +24,10 @@ function createBoardWithColoredPieces(
 ) {
   const board = new ChessBoard();
   lightLocations.forEach((lightLocation) =>
-    putPiece(board, lightLocation, pieceType, "light")
+    putPiece(board, lightLocation, pieceType, "LIGHT")
   );
   darkLocations.forEach((darkLocation) =>
-    putPiece(board, darkLocation, pieceType, "dark")
+    putPiece(board, darkLocation, pieceType, "DARK")
   );
 
   return board;
@@ -283,7 +287,7 @@ describe("Special Movements", () => {});
 
 describe("Turns", () => {
   it("Black should not be allowed to start the game", () => {
-    const game = new Game();
+    const game = Game.defaultGame();
 
     assert.throws(
       () => game.move("D7", "D6"),
@@ -293,7 +297,7 @@ describe("Turns", () => {
   });
 
   it("White should be able to move at the start of the game", () => {
-    const game = new Game();
+    const game = Game.defaultGame();
 
     assert.doesNotThrow(
       () => game.move("D2", "D3"),
@@ -303,7 +307,7 @@ describe("Turns", () => {
   });
 
   it("Movement should be reflected in the next turn", () => {
-    const game = new Game();
+    const game = Game.defaultGame();
     game.move("D2", "D3");
 
     assert.throws(
@@ -314,7 +318,7 @@ describe("Turns", () => {
   });
 
   it("Turns should be alternating", () => {
-    const game = new Game();
+    const game = Game.defaultGame();
 
     assert.doesNotThrow(
       () => game.move("D2", "D3"),
