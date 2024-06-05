@@ -312,4 +312,20 @@ describe("Turns", () => {
       "There should be no pieces on D2"
     );
   });
+
+  it("Turns should be alternating", () => {
+    const game = new Game();
+
+    assert.doesNotThrow(
+      () => game.move("D2", "D3"),
+      TurnError,
+      "White should be able to move at the start of the game"
+    );
+
+    assert.doesNotThrow(
+      () => game.move("D7", "D6"),
+      TurnError,
+      "Black should be able to move in the second turn"
+    );
+  });
 });

@@ -14,7 +14,11 @@ class Game {
 
   move(startLocation: string, targetLocation: string) {
     const piece = this.#board.getPiece(startLocation);
-    if (piece && piece?.color !== "LIGHT") {
+    if (
+      piece &&
+      ((this.#isWhitesTurn && piece?.color !== "LIGHT") ||
+        (!this.#isWhitesTurn && piece?.color !== "DARK"))
+    ) {
       throw new TurnError();
     }
     this.#board.movePiece(startLocation, targetLocation);
