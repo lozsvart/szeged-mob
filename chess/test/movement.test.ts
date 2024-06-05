@@ -33,7 +33,7 @@ function createBoardWithColoredPieces(
   return board;
 }
 
-describe("Movement Calculations", () => {
+describe("Board Movement", () => {
   [
     {
       lightLocations: ["A1"],
@@ -283,11 +283,11 @@ describe("Piece Movements", () => {
   });
 });
 
-describe("Special Movements", () => {});
+const createDefaultGame = () => Game.defaultGame();
 
 describe("Turns", () => {
   it("Black should not be allowed to start the game", () => {
-    const game = Game.defaultGame();
+    const game = createDefaultGame();
 
     assert.throws(
       () => game.move("D7", "D6"),
@@ -297,7 +297,7 @@ describe("Turns", () => {
   });
 
   it("White should be able to move at the start of the game", () => {
-    const game = Game.defaultGame();
+    const game = createDefaultGame();
 
     assert.doesNotThrow(
       () => game.move("D2", "D3"),
@@ -307,7 +307,7 @@ describe("Turns", () => {
   });
 
   it("Movement should be reflected in the next turn", () => {
-    const game = Game.defaultGame();
+    const game = createDefaultGame();
     game.move("D2", "D3");
 
     assert.throws(
@@ -318,7 +318,7 @@ describe("Turns", () => {
   });
 
   it("Turns should be alternating", () => {
-    const game = Game.defaultGame();
+    const game = createDefaultGame();
 
     assert.doesNotThrow(
       () => game.move("D2", "D3"),
@@ -339,3 +339,5 @@ describe("Turns", () => {
     );
   });
 });
+
+describe("Game movement", () => {});

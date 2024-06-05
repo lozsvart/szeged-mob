@@ -6,7 +6,7 @@
 - [x] Unionize movement tests
 - [x] Pawn movement (opening / capture)
 - [x] Actually move pieces
-- [ ] Alternating black & white movements
+- [x] Alternating black & white movements
 - [ ] Check and checkmate checking
 - [ ] Special movements (castling, en passant)
 - [ ] Use polymorphism for piece movement
