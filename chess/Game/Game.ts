@@ -1,4 +1,4 @@
-import ChessBoard, { PieceType, Piece } from "../ChessBoard";
+import ChessBoard, { PieceType, Piece, Location, Column } from "../ChessBoard";
 
 export class TurnError extends Error {}
 
@@ -43,14 +43,14 @@ class Game {
     });
   }
 
-  private constructor(startPieces: Record<string, Piece>) {
+  private constructor(startPieces: Partial<Record<Location, Piece>>) {
     this.#board = new ChessBoard();
     for (let [location, piece] of Object.entries(startPieces)) {
-      this.#board.putPiece(location, piece.type, piece.color);
+      this.#board.putPiece(location as Location, piece.type, piece.color);
     }
   }
 
-  move(startLocation: string, targetLocation: string) {
+  move(startLocation: Location, targetLocation: Location) {
     const piece = this.#board.getPiece(startLocation);
     if (
       piece &&

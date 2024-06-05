@@ -1,17 +1,20 @@
 import {
+  Column,
+  Location,
   MovementError,
   Piece,
   PieceColor,
   PieceType,
+  Row,
 } from "./ChessBoard.interface";
 
-const rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
-const columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
+const rows: Array<Row> = ["1", "2", "3", "4", "5", "6", "7", "8"];
+const columns: Array<Column> = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 class ChessBoard {
-  #pieces: Map<string, Piece>;
+  #pieces: Map<Location, Piece>;
 
-  getPiece(location: string) {
+  getPiece(location: Location) {
     return this.#pieces.get(location);
   }
 
@@ -23,7 +26,7 @@ class ChessBoard {
     return this.#pieces.size;
   }
 
-  putPiece(location: string, pieceType?: string, color?: PieceColor) {
+  putPiece(location: Location, pieceType?: string, color?: PieceColor) {
     const piece: Piece = {
       type: pieceType || "",
       color: color || "LIGHT",
@@ -31,16 +34,16 @@ class ChessBoard {
     this.#pieces.set(location, piece);
   }
 
-  getMoveOptionCount(location: string) {
+  getMoveOptionCount(location: Location) {
     return this.getMoveOptions(location).size;
   }
 
-  getMoveOptions(location: string) {
+  getMoveOptions(location: Location) {
     const moveOptions = new Set();
     const piece = this.#pieces.get(location);
     for (const row of rows) {
       for (const column of columns) {
-        const targetLocation = column + row;
+        const targetLocation = `${column}${row}` as Location;
         if (
           piece &&
           this.canPieceMoveTo(location, targetLocation, piece) &&
@@ -56,7 +59,7 @@ class ChessBoard {
     return moveOptions;
   }
 
-  movePiece(startLocation: string, targetLocation: string) {
+  movePiece(startLocation: Location, targetLocation: Location) {
     if (!this.getMoveOptions(startLocation).has(targetLocation)) {
       throw new MovementError();
     }
@@ -65,8 +68,8 @@ class ChessBoard {
   }
 
   private canPieceMoveTo(
-    startLocation: string,
-    targetLocation: string,
+    startLocation: Location,
+    targetLocation: Location,
     piece: Piece
   ) {
     const pieceType = piece.type;
@@ -131,25 +134,28 @@ class ChessBoard {
     return false;
   }
 
-  private toCoordinates(location: string) {
-    const [locationColumn, locationRow] = location.split("");
+  private toCoordinates(location: Location) {
+    const [locationColumn, locationRow] = location.split("") as [Column, Row];
     const columnIndex = columns.indexOf(locationColumn);
     const rowIndex = rows.indexOf(locationRow);
     return [columnIndex, rowIndex];
   }
 
-  private hasDifferentlyColoredPieces(locationA: string, locationB: string) {
+  private hasDifferentlyColoredPieces(
+    locationA: Location,
+    locationB: Location
+  ) {
     let pieceA = this.#pieces.get(locationA);
     let pieceB = this.#pieces.get(locationB);
     return pieceA?.color !== pieceB?.color;
   }
 
-  private isFieldEmpty(location: string): boolean {
+  private isFieldEmpty(location: Location): boolean {
     return !this.#pieces.get(location);
   }
 
-  private isOpenIntervalEmpty(startLocation: string, endLocation: string) {
-    let insideFields: string[] = this.getInsideFields(
+  private isOpenIntervalEmpty(startLocation: Location, endLocation: Location) {
+    let insideFields: Location[] = this.getInsideFields(
       startLocation,
       endLocation
     );
@@ -159,7 +165,10 @@ class ChessBoard {
       .reduce((acc, it) => acc && it, true);
   }
 
-  private getInsideFields(startLocation: string, endLocation: string) {
+  private getInsideFields(
+    startLocation: Location,
+    endLocation: Location
+  ): Location[] {
     const [startColumnIndex, startRowIndex] = this.toCoordinates(startLocation);
     const [endColumnIndex, endRowIndex] = this.toCoordinates(endLocation);
 
@@ -174,7 +183,7 @@ class ChessBoard {
       Math.floor(rowOffset / stepCount),
     ];
 
-    let insideFields: string[] = [];
+    let insideFields: Location[] = [];
     for (let i = 1; i < stepCount; i++) {
       const [fieldColumn, fieldRow] = [
         startColumnIndex + i * dirColumn,
