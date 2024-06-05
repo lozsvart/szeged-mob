@@ -6,6 +6,7 @@ import ChessBoard, {
   PieceColor,
   Location,
   Piece,
+  CheckError,
 } from "../ChessBoard";
 import Game from "../Game";
 import { TurnError } from "../Game/Game";
@@ -346,4 +347,17 @@ describe("Turns", () => {
   });
 });
 
-describe("Game movement", () => {});
+describe("Game movement", () => {
+  it("should not let the King to move into check", () => {
+    const game = createGameWithColoredPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      B2: { type: PieceType.ROOK, color: "DARK" },
+    });
+
+    assert.throws(
+      () => game.move("A1", "A2"),
+      CheckError,
+      "The king should not be able to move into check"
+    );
+  });
+});

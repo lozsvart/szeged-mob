@@ -20,3 +20,4 @@ export interface Piece {
 }
 
 export class MovementError extends Error {}
+export class CheckError extends MovementError {}
