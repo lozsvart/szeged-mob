@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 import ChessBoard, { PieceType, MovementError } from "../ChessBoard";
 import Game from "../Game";
+import { TurnError } from "../Game/Game";
 
 function putPiece(
   board: ChessBoard,
@@ -281,7 +282,7 @@ describe("Piece Movements", () => {
 describe("Special Movements", () => {});
 
 describe("Turns", () => {
-  it("White should start the game", () => {
+  it("Black should not be allowed to start the game", () => {
     // Given a game without any movements
     const game = new Game();
 
@@ -289,8 +290,8 @@ describe("Turns", () => {
     // Then it should not move the black piece
     assert.throws(
       () => game.move("D7", "D6"),
-      MovementError,
-      "Movement onto a piece with the same should not be allowed"
+      TurnError,
+      "Black should not be allowed to move at the start"
     );
   });
 });

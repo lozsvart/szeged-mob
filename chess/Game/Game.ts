@@ -4,8 +4,10 @@ class Game {
   constructor() {}
 
   move(startLocation: string, targetLocation: string) {
-    throw MovementError;
+    throw new TurnError();
   }
 }
+
+export class TurnError extends Error {}
 
 export default Game;
