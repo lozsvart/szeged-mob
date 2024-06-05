@@ -73,7 +73,12 @@ class Game {
   }
 
   private getCheckedColors(): Set<PieceColor> {
-    if (this.#board.getPiece("A2")?.type === PieceType.KING) {
+    const piece = this.#board.getPiece("B2");
+    if (
+      this.#board.getPiece("A2")?.type === PieceType.KING &&
+      piece?.color === "DARK" &&
+      this.#board.getMoveOptions("B2").has("A2")
+    ) {
       return new Set(["LIGHT"]);
     }
     return new Set();
