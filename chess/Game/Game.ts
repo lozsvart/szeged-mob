@@ -8,15 +8,24 @@ class Game {
 
   constructor() {
     this.#board = new ChessBoard();
-    const startPieces: Array<[String, Piece]> = [
-      [
-        "A2",
-        {
-          type: PieceType.PAWN,
-          color: "DARK",
-        },
-      ],
-    ];
+    const startPieces: Record<string, Piece> = {
+      A1: { type: PieceType.PAWN, color: "LIGHT" },
+      B1: { type: PieceType.PAWN, color: "LIGHT" },
+      C1: { type: PieceType.PAWN, color: "LIGHT" },
+      D1: { type: PieceType.PAWN, color: "LIGHT" },
+      E1: { type: PieceType.PAWN, color: "LIGHT" },
+      F1: { type: PieceType.PAWN, color: "LIGHT" },
+      G1: { type: PieceType.PAWN, color: "LIGHT" },
+      H1: { type: PieceType.PAWN, color: "LIGHT" },
+      A2: { type: PieceType.PAWN, color: "LIGHT" },
+      B2: { type: PieceType.PAWN, color: "LIGHT" },
+      C2: { type: PieceType.PAWN, color: "LIGHT" },
+      D2: { type: PieceType.PAWN, color: "LIGHT" },
+      E2: { type: PieceType.PAWN, color: "LIGHT" },
+      F2: { type: PieceType.PAWN, color: "LIGHT" },
+      G2: { type: PieceType.PAWN, color: "LIGHT" },
+      H2: { type: PieceType.PAWN, color: "LIGHT" },
+    };
     this.#board.putPiece("C2", PieceType.PAWN);
     this.#board.putPiece("D2", PieceType.PAWN);
     this.#board.putPiece("D7", PieceType.PAWN, "dark");
