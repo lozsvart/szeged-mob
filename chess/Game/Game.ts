@@ -7,7 +7,7 @@ import ChessBoard, {
   CheckError,
 } from "../ChessBoard";
 
-export class TurnError extends Error {}
+export class TurnError extends Error { }
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -73,9 +73,10 @@ class Game {
   private getCheckedColors(): Set<PieceColor> {
     const pieces = this.#board.getPiecesByColor("DARK");
 
-    const moveOptions = new Set<Location>();
+    let moveOptions: Set<Location> = new Set<Location>();
     for (const [location] of pieces.entries()) {
-      this.#board.getMoveOptions(location);
+      for (const moveOptionLocation of this.#board.getMoveOptions(location))
+        moveOptions.add(moveOptionLocation);
     }
 
     const piece = this.#board.getPiece("B2");

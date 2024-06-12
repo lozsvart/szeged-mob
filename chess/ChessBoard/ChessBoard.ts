@@ -50,7 +50,7 @@ class ChessBoard {
   }
 
   getMoveOptions(location: Location) {
-    const moveOptions = new Set();
+    const moveOptions = new Set<Location>();
     const piece = this.#pieces.get(location);
     for (const row of rows) {
       for (const column of columns) {
