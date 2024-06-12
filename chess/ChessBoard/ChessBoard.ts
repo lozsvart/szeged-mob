@@ -26,6 +26,10 @@ class ChessBoard {
     return this.#pieces.size;
   }
 
+  getPiecesByColor(color: PieceColor) {
+    return this.#pieces;
+  }
+
   putPiece(location: Location, pieceType?: string, color?: PieceColor) {
     const piece: Piece = {
       type: pieceType || "",

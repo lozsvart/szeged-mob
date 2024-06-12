@@ -10,7 +10,6 @@ import ChessBoard, {
 export class TurnError extends Error {}
 
 class Game {
-  #isWhitesTurn: boolean = true;
   #colorToMove: PieceColor = "LIGHT";
   #board: ChessBoard;
 
@@ -68,7 +67,6 @@ class Game {
     if (this.getCheckedColors().has("LIGHT")) {
       throw new CheckError();
     }
-    this.#isWhitesTurn = !this.#isWhitesTurn;
     this.#colorToMove = this.#colorToMove === "LIGHT" ? "DARK" : "LIGHT";
   }
 
