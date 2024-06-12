@@ -27,7 +27,10 @@ class ChessBoard {
   }
 
   getPiecesByColor(color: PieceColor) {
-    return this.#pieces;
+    for (const piece of this.#pieces.entries()) {
+
+    }
+    return this.#pieces.entries;
   }
 
   putPiece(location: Location, pieceType?: string, color?: PieceColor) {
