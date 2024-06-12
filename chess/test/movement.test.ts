@@ -11,6 +11,17 @@ import ChessBoard, {
 import Game from "../Game";
 import { TurnError } from "../Game/Game";
 
+interface Scenario {
+  lightLocations?: Array<Location>;
+  darkLocations?: Array<Location>;
+  shouldContain?: Array<Location>;
+  shouldNotContain?: Array<Location>;
+  movingFrom: Location;
+  pieceType: PieceType;
+  movementOptionCount?: number;
+  description: string;
+}
+
 function putPiece(
   board: ChessBoard,
   location: Location,
@@ -41,7 +52,7 @@ const createGameWithColoredPieces = (
 ) => new Game(pieces);
 
 describe("Board Movement", () => {
-  [
+  const boardMovementScenarios: Array<Scenario> = [
     {
       lightLocations: ["A1"],
       shouldContain: ["A2", "A8", "B1", "H1"],
@@ -211,7 +222,9 @@ describe("Board Movement", () => {
       description:
         "Pawn should be able to move forward two squares from the starting position",
     },
-  ].forEach(
+  ];
+
+  boardMovementScenarios.forEach(
     ({
       lightLocations = [],
       darkLocations = [],
