@@ -71,6 +71,13 @@ class Game {
   }
 
   private getCheckedColors(): Set<PieceColor> {
+    const pieces = this.#board.getPiecesByColor("DARK");
+
+    const moveOptions = new Set<Location>();
+    for (const [location] of pieces.entries()) {
+      this.#board.getMoveOptions(location);
+    }
+
     const piece = this.#board.getPiece("B2");
     if (
       this.#board.getPiece("A2")?.type === PieceType.KING &&

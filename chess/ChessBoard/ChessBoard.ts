@@ -27,7 +27,7 @@ class ChessBoard {
   }
 
   getPiecesByColor(color: PieceColor) {
-    let result = new Map();
+    let result = new Map<Location, Piece>();
     for (const [location, piece] of this.#pieces.entries()) {
       if (piece.color === color) {
         // We might need to use deep-copy instead
