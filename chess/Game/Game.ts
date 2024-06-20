@@ -64,7 +64,7 @@ class Game {
     }
 
     this.#board.movePiece(startLocation, targetLocation);
-    if (this.isChecked("LIGHT")) {
+    if (this.isChecked(this.#colorToMove)) {
       throw new CheckError();
     }
     this.#colorToMove = this.getOtherColor(this.#colorToMove);

@@ -373,4 +373,16 @@ describe("Game movement", () => {
       "The king should not be able to move into check"
     );
   });
+  it("same color should not be able to check King", () => {
+    const game = createGameWithColoredPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      B3: { type: PieceType.ROOK, color: "DARK" },
+      C3: { type: PieceType.KING, color: "DARK" },
+    });
+    assert.doesNotThrow(
+      () => game.move("A1", "A2"),
+      CheckError,
+      "Same color should not be able to check King"
+    )
+  })
 });
