@@ -67,7 +67,7 @@ class Game {
     if (this.isChecked("LIGHT")) {
       throw new CheckError();
     }
-    this.#colorToMove = this.#colorToMove === "LIGHT" ? "DARK" : "LIGHT";
+    this.#colorToMove = this.getOtherColor(this.#colorToMove);
   }
 
   private isChecked(color: PieceColor): boolean {
@@ -81,11 +81,9 @@ class Game {
         locationsUnderAttack.add(moveOptionLocation);
     }
 
-    const piece = this.#board.getPiece("B2");
     if (
       this.#board.getPiece("A2")?.type === PieceType.KING &&
-      piece?.color === "DARK" &&
-      this.#board.getMoveOptions("B2").has("A2")
+      locationsUnderAttack.has("A2")
     ) {
       return true;
     }
