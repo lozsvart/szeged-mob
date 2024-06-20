@@ -7,7 +7,7 @@ import ChessBoard, {
   CheckError,
 } from "../ChessBoard";
 
-export class TurnError extends Error {}
+export class TurnError extends Error { }
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -81,12 +81,12 @@ class Game {
         locationsUnderAttack.add(moveOptionLocation);
     }
 
-    if (
-      this.#board.getPiece("A2")?.type === PieceType.KING &&
-      locationsUnderAttack.has("A2")
-    ) {
-      return true;
+    for (const locationUnderAttack of locationsUnderAttack) {
+      if (this.#board.getPiece(locationUnderAttack)?.type === PieceType.KING) {
+        return true
+      }
     }
+
     return false;
   }
 
