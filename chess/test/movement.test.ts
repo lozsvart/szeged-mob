@@ -383,6 +383,35 @@ describe("Game movement", () => {
       () => game.move("A1", "A2"),
       CheckError,
       "Same color should not be able to check King"
-    )
-  })
+    );
+  });
+  it("movement with own piece should not allow discovered check", () => {
+    const game = createGameWithColoredPieces({
+      C6: { type: PieceType.KING, color: "LIGHT" },
+      C5: { type: PieceType.ROOK, color: "LIGHT" },
+      C3: { type: PieceType.ROOK, color: "DARK" },
+    });
+    assert.throws(
+      () => game.move("C5", "D5"),
+      CheckError,
+      "Movement with own piece should not allow discovered check"
+    );
+  });
+  it("Should be able to move after invalid-move-try-because-of-check", () => {
+    const game = createGameWithColoredPieces({
+      C6: { type: PieceType.KING, color: "LIGHT" },
+      C5: { type: PieceType.ROOK, color: "LIGHT" },
+      C3: { type: PieceType.ROOK, color: "DARK" },
+    });
+    assert.throws(
+      () => game.move("C5", "D5"),
+      CheckError,
+      "Should be able to move after invalid-move-try-because-of-check- own king got check"
+    );
+    assert.doesNotThrow(
+      () => game.move("C5", "C4"),
+      Error,
+      "Should be able to move after invalid-move-try-because-of-check"
+    );
+  });
 });
