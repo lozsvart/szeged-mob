@@ -7,7 +7,7 @@ import ChessBoard, {
   CheckError,
 } from "../ChessBoard";
 
-export class TurnError extends Error { }
+export class TurnError extends Error {}
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -64,19 +64,21 @@ class Game {
     }
 
     this.#board.movePiece(startLocation, targetLocation);
-    if (this.getCheckedColors().has("LIGHT")) {
+    if (this.isChecked("LIGHT")) {
       throw new CheckError();
     }
     this.#colorToMove = this.#colorToMove === "LIGHT" ? "DARK" : "LIGHT";
   }
 
-  private getCheckedColors(): Set<PieceColor> {
-    const pieces = this.#board.getPiecesByColor("DARK");
+  private isChecked(color: PieceColor): boolean {
+    const attackingPieces = this.#board.getPiecesByColor(
+      this.getOtherColor(color)
+    );
 
-    let moveOptions: Set<Location> = new Set<Location>();
-    for (const [location] of pieces.entries()) {
+    let locationsUnderAttack: Set<Location> = new Set<Location>();
+    for (const [location] of attackingPieces.entries()) {
       for (const moveOptionLocation of this.#board.getMoveOptions(location))
-        moveOptions.add(moveOptionLocation);
+        locationsUnderAttack.add(moveOptionLocation);
     }
 
     const piece = this.#board.getPiece("B2");
@@ -85,9 +87,13 @@ class Game {
       piece?.color === "DARK" &&
       this.#board.getMoveOptions("B2").has("A2")
     ) {
-      return new Set(["LIGHT"]);
+      return true;
     }
-    return new Set();
+    return false;
+  }
+
+  private getOtherColor(color: PieceColor) {
+    return color === "LIGHT" ? "DARK" : "LIGHT";
   }
 }
 
