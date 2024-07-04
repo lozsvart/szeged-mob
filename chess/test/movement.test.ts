@@ -397,7 +397,7 @@ describe("Game movement", () => {
       "Movement with own piece should not allow discovered check"
     );
   });
-  it("Should be able to move after invalid-move-try-because-of-check", () => {
+  it("Should revert movement after trying to move into a check", () => {
     const game = createGameWithColoredPieces({
       C6: { type: PieceType.KING, color: "LIGHT" },
       C5: { type: PieceType.ROOK, color: "LIGHT" },
@@ -406,12 +406,12 @@ describe("Game movement", () => {
     assert.throws(
       () => game.move("C5", "D5"),
       CheckError,
-      "Should be able to move after invalid-move-try-because-of-check- own king got check"
+      "King should be in check"
     );
     assert.doesNotThrow(
       () => game.move("C5", "C4"),
       Error,
-      "Should be able to move after invalid-move-try-because-of-check"
+      "King should be able to move after reverting the previous movement"
     );
   });
 });
