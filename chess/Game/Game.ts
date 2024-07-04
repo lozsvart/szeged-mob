@@ -7,7 +7,7 @@ import ChessBoard, {
   CheckError,
 } from "../ChessBoard";
 
-export class TurnError extends Error { }
+export class TurnError extends Error {}
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -63,8 +63,10 @@ class Game {
       throw new TurnError();
     }
 
+    this.#board.snapshot();
     this.#board.movePiece(startLocation, targetLocation);
     if (this.isChecked(this.#colorToMove)) {
+      this.#board.restoreSnapshot();
       throw new CheckError();
     }
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
@@ -83,7 +85,7 @@ class Game {
 
     for (const locationUnderAttack of locationsUnderAttack) {
       if (this.#board.getPiece(locationUnderAttack)?.type === PieceType.KING) {
-        return true
+        return true;
       }
     }
 

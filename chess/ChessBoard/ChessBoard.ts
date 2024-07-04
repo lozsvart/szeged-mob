@@ -15,16 +15,21 @@ class ChessBoard {
   #pieces: Map<Location, Piece>;
   #piecesSnapshot: Map<Location, Piece>;
 
+  constructor() {
+    this.#pieces = new Map();
+    this.#piecesSnapshot = new Map();
+  }
+
   snapshot() {
-    
+    this.#piecesSnapshot = new Map(this.#pieces);
+  }
+
+  restoreSnapshot() {
+    this.#pieces = new Map(this.#piecesSnapshot);
   }
 
   getPiece(location: Location) {
     return this.#pieces.get(location);
-  }
-
-  constructor() {
-    this.#pieces = new Map();
   }
 
   countPieces() {
