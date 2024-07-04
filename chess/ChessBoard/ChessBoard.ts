@@ -13,6 +13,11 @@ const columns: Array<Column> = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 class ChessBoard {
   #pieces: Map<Location, Piece>;
+  #piecesSnapshot: Map<Location, Piece>;
+
+  snapshot() {
+    
+  }
 
   getPiece(location: Location) {
     return this.#pieces.get(location);
