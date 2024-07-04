@@ -7,7 +7,7 @@ import ChessBoard, {
   CheckError,
 } from "../ChessBoard";
 
-export class TurnError extends Error {}
+export class TurnError extends Error { }
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -55,6 +55,10 @@ class Game {
     for (let [location, piece] of Object.entries(startPieces)) {
       this.#board.putPiece(location as Location, piece.type, piece.color);
     }
+  }
+
+  isFinished(): boolean {
+    return false;
   }
 
   move(startLocation: Location, targetLocation: Location) {

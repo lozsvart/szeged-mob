@@ -47,7 +47,7 @@ function createBoardWithColoredPieces(
   return board;
 }
 
-const createGameWithColoredPieces = (
+const createGameWithPieces = (
   pieces: Partial<Record<Location, Piece>>
 ) => new Game(pieces);
 
@@ -362,7 +362,7 @@ describe("Turns", () => {
 
 describe("Game movement", () => {
   it("should not let the King to move into check", () => {
-    const game = createGameWithColoredPieces({
+    const game = createGameWithPieces({
       A1: { type: PieceType.KING, color: "LIGHT" },
       B2: { type: PieceType.ROOK, color: "DARK" },
     });
@@ -374,7 +374,7 @@ describe("Game movement", () => {
     );
   });
   it("same color should not be able to check King", () => {
-    const game = createGameWithColoredPieces({
+    const game = createGameWithPieces({
       A1: { type: PieceType.KING, color: "LIGHT" },
       B3: { type: PieceType.ROOK, color: "DARK" },
       C3: { type: PieceType.KING, color: "DARK" },
@@ -386,7 +386,7 @@ describe("Game movement", () => {
     );
   });
   it("movement with own piece should not allow discovered check", () => {
-    const game = createGameWithColoredPieces({
+    const game = createGameWithPieces({
       C6: { type: PieceType.KING, color: "LIGHT" },
       C5: { type: PieceType.ROOK, color: "LIGHT" },
       C3: { type: PieceType.ROOK, color: "DARK" },
@@ -398,7 +398,7 @@ describe("Game movement", () => {
     );
   });
   it("Should revert movement after trying to move into a check", () => {
-    const game = createGameWithColoredPieces({
+    const game = createGameWithPieces({
       C6: { type: PieceType.KING, color: "LIGHT" },
       C5: { type: PieceType.ROOK, color: "LIGHT" },
       C3: { type: PieceType.ROOK, color: "DARK" },
@@ -415,3 +415,17 @@ describe("Game movement", () => {
     );
   });
 });
+
+describe("Game status", () => {
+  it("Should end game with check-mate", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      C2: { type: PieceType.ROOK, color: "DARK" },
+      D1: { type: PieceType.ROOK, color: "DARK" },
+    });
+
+    assert(game.isFinished(), 'Game should be over.');
+  });
+
+});
+
