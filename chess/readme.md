@@ -7,7 +7,7 @@
 - [x] Pawn movement (opening / capture)
 - [x] Actually move pieces
 - [x] Alternating black & white movements
-- [ ] Check and checkmate checking
+- [x] Check and checkmate checking
 - [ ] Special movements (castling, en passant)
 - [ ] Use polymorphism for piece movement
 - [ ] Pawn promotion

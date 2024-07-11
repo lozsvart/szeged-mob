@@ -12,6 +12,14 @@ export enum PieceType {
   PAWN = "Pawn",
 }
 
+export enum GameState {
+  WHITE_TO_MOVE,
+  BLACK_TO_MOVE,
+  WHITE_WON,
+  BLACK_WON,
+  STALEMATE,
+}
+
 export type PieceColor = "LIGHT" | "DARK";
 
 export interface Piece {

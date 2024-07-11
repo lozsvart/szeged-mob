@@ -7,6 +7,7 @@ import ChessBoard, {
   Location,
   Piece,
   CheckError,
+  GameState,
 } from "../ChessBoard";
 import Game from "../Game";
 import { TurnError } from "../Game/Game";
@@ -47,9 +48,8 @@ function createBoardWithColoredPieces(
   return board;
 }
 
-const createGameWithPieces = (
-  pieces: Partial<Record<Location, Piece>>
-) => new Game(pieces);
+const createGameWithPieces = (pieces: Partial<Record<Location, Piece>>) =>
+  new Game(pieces);
 
 describe("Board Movement", () => {
   const boardMovementScenarios: Array<Scenario> = [
@@ -422,22 +422,165 @@ describe("Game status", () => {
       A1: { type: PieceType.KING, color: "LIGHT" },
       C2: { type: PieceType.ROOK, color: "DARK" },
       D1: { type: PieceType.ROOK, color: "DARK" },
-      D2: { type: PieceType.KING, color: "DARK" }
+      D2: { type: PieceType.KING, color: "DARK" },
     });
 
-    assert(game.isFinished(), 'Game should be over.');
+    assert.strictEqual(
+      game.getState(),
+      GameState.BLACK_WON,
+      "Black should be the winner."
+    );
   });
 
-  it("Should not end game when white is still able to move", () => {
+  it("Should not end game when white King can get out of check via capture", () => {
     const game = createGameWithPieces({
       A1: { type: PieceType.KING, color: "LIGHT" },
       B2: { type: PieceType.ROOK, color: "DARK" },
       D1: { type: PieceType.ROOK, color: "DARK" },
-      D2: { type: PieceType.KING, color: "DARK" }
+      D2: { type: PieceType.KING, color: "DARK" },
     });
 
-    assert(!game.isFinished(), 'Game should not be over.');
+    assert.strictEqual(
+      game.getState(),
+      GameState.WHITE_TO_MOVE,
+      "White should be able to move."
+    );
   });
 
+  it("Should not end game when white is able to capture checking piece", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      C2: { type: PieceType.ROOK, color: "DARK" },
+      D1: { type: PieceType.ROOK, color: "DARK" },
+      D2: { type: PieceType.KING, color: "DARK" },
+      E1: { type: PieceType.ROOK, color: "LIGHT" },
+    });
+
+    assert.strictEqual(
+      game.getState(),
+      GameState.WHITE_TO_MOVE,
+      "White should be able to move."
+    );
+  });
+
+  it("Should not end game when white is able to move in front of checking piece", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      C2: { type: PieceType.ROOK, color: "DARK" },
+      D1: { type: PieceType.ROOK, color: "DARK" },
+      D2: { type: PieceType.KING, color: "DARK" },
+      B3: { type: PieceType.ROOK, color: "LIGHT" },
+    });
+
+    assert.strictEqual(
+      game.getState(),
+      GameState.WHITE_TO_MOVE,
+      "White should be able to move."
+    );
+  });
+
+  it("Should end game when it is a stalemate", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      C2: { type: PieceType.ROOK, color: "DARK" },
+      B3: { type: PieceType.ROOK, color: "DARK" },
+      D2: { type: PieceType.KING, color: "DARK" },
+    });
+
+    assert.strictEqual(
+      game.getState(),
+      GameState.STALEMATE,
+      "It should be a stalemate."
+    );
+  });
+
+  it("Should end game when white gives a checkmate", () => {
+    const game = createGameWithPieces({
+      C3: { type: PieceType.KING, color: "LIGHT" },
+      C2: { type: PieceType.QUEEN, color: "LIGHT" },
+      A1: { type: PieceType.KING, color: "DARK" },
+    });
+
+    game.move("C2", "B2");
+
+    assert.strictEqual(
+      game.getState(),
+      GameState.WHITE_WON,
+      "White should be the winner."
+    );
+  });
 });
 
+describe("Full game", () => {
+  it("Fool's mate", () => {
+    const game = Game.defaultGame();
+
+    game.move("F2", "F3");
+    game.move("E7", "E6");
+
+    game.move("G2", "G4");
+    game.move("D8", "H4");
+
+    assert.strictEqual(
+      game.getState(),
+      GameState.BLACK_WON,
+      "Black should be the winner."
+    );
+  });
+
+  it("'Immortal Game' played between Adolf Anderssen and Lionel Kieseritzky in 1851", () => {
+    const game = Game.defaultGame();
+
+    game.move("E2", "E4");
+    game.move("E7", "E5");
+    game.move("F2", "F4");
+    game.move("E5", "F4");
+    game.move("F1", "C4");
+    game.move("D8", "H4");
+    game.move("E1", "F1");
+    game.move("B7", "B5");
+    game.move("C4", "B5");
+    game.move("G8", "F6");
+    game.move("G1", "F3");
+    game.move("H4", "H6");
+    game.move("D2", "D3");
+    game.move("F6", "H5");
+    game.move("F3", "H4");
+    game.move("H6", "G5");
+    game.move("H4", "F5");
+    game.move("C7", "C6");
+    game.move("G2", "G4");
+    game.move("H5", "F6");
+    game.move("H1", "G1");
+    game.move("C6", "B5");
+    game.move("H2", "H4");
+    game.move("G5", "G6");
+    game.move("H4", "H5");
+    game.move("G6", "G5");
+    game.move("D1", "F3");
+    game.move("F6", "G8");
+    game.move("C1", "F4");
+    game.move("G5", "F6");
+    game.move("B1", "C3");
+    game.move("F8", "C5");
+    game.move("C3", "D5");
+    game.move("F6", "B2");
+    game.move("F4", "D6");
+    game.move("C5", "G1");
+    game.move("E4", "E5");
+    game.move("B2", "A1");
+    game.move("F1", "E2");
+    game.move("B8", "A6");
+    game.move("F5", "G7");
+    game.move("E8", "D8");
+    game.move("F3", "F6");
+    game.move("G8", "F6");
+    game.move("D6", "E7");
+
+    assert.strictEqual(
+      game.getState(),
+      GameState.WHITE_WON,
+      "White should be the winner."
+    );
+  });
+});

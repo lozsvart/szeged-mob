@@ -5,9 +5,10 @@ import ChessBoard, {
   Column,
   PieceColor,
   CheckError,
+  GameState,
 } from "../ChessBoard";
 
-export class TurnError extends Error { }
+export class TurnError extends Error {}
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -57,19 +58,39 @@ class Game {
     }
   }
 
-  isFinished(): boolean {
+  getState(): GameState {
+    const isFinished = this.isFinished();
+    if (!isFinished) {
+      return this.#colorToMove == "LIGHT"
+        ? GameState.WHITE_TO_MOVE
+        : GameState.BLACK_TO_MOVE;
+    } else {
+      if (this.isChecked(this.#colorToMove)) {
+        return this.#colorToMove == "LIGHT"
+          ? GameState.BLACK_WON
+          : GameState.WHITE_WON;
+      }
+    }
+    return GameState.STALEMATE;
+  }
+
+  private isFinished(): boolean {
     const pieces = this.#board.getPiecesByColor(this.#colorToMove);
 
-    const moveOptions = new Set();
     for (let startLocation of pieces.keys()) {
       const targetLocations = this.#board.getMoveOptions(startLocation);
       for (let targetLocation of targetLocations) {
-        moveOptions.add(startLocation + "-" + targetLocation);
+        this.#board.snapshot();
+        this.#board.movePiece(startLocation, targetLocation);
+        if (this.isChecked(this.#colorToMove)) {
+          this.#board.restoreSnapshot();
+        } else {
+          this.#board.restoreSnapshot();
+          return false;
+        }
       }
     }
-    const canCurrentPlayerMove =
-      !!this.#board.getPiece("B2") && moveOptions.size > 0;
-    return !canCurrentPlayerMove;
+    return true;
   }
 
   move(startLocation: Location, targetLocation: Location) {
