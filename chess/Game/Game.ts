@@ -7,7 +7,7 @@ import ChessBoard, {
   CheckError,
 } from "../ChessBoard";
 
-export class TurnError extends Error {}
+export class TurnError extends Error { }
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -58,7 +58,8 @@ class Game {
   }
 
   isFinished(): boolean {
-    return this.#board.getPiece("B2") ? false : true;
+    const canCurrentPlayerMove = (this.#board.getPiece("B2") ? true : false) && this.#board.getMoveOptions("A1").size > 0
+    return !canCurrentPlayerMove;
   }
 
   move(startLocation: Location, targetLocation: Location) {
