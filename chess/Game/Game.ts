@@ -5,48 +5,48 @@ import ChessBoard, {
   Column,
   PieceColor,
   CheckError,
-} from '../ChessBoard';
+} from "../ChessBoard";
 
 export class TurnError extends Error {}
 
 class Game {
-  #colorToMove: PieceColor = 'LIGHT';
+  #colorToMove: PieceColor = "LIGHT";
   #board: ChessBoard;
 
   static defaultGame() {
     return new Game({
-      A1: { type: PieceType.ROOK, color: 'LIGHT' },
-      B1: { type: PieceType.KNIGHT, color: 'LIGHT' },
-      C1: { type: PieceType.BISHOP, color: 'LIGHT' },
-      D1: { type: PieceType.QUEEN, color: 'LIGHT' },
-      E1: { type: PieceType.KING, color: 'LIGHT' },
-      F1: { type: PieceType.BISHOP, color: 'LIGHT' },
-      G1: { type: PieceType.KNIGHT, color: 'LIGHT' },
-      H1: { type: PieceType.ROOK, color: 'LIGHT' },
-      A2: { type: PieceType.PAWN, color: 'LIGHT' },
-      B2: { type: PieceType.PAWN, color: 'LIGHT' },
-      C2: { type: PieceType.PAWN, color: 'LIGHT' },
-      D2: { type: PieceType.PAWN, color: 'LIGHT' },
-      E2: { type: PieceType.PAWN, color: 'LIGHT' },
-      F2: { type: PieceType.PAWN, color: 'LIGHT' },
-      G2: { type: PieceType.PAWN, color: 'LIGHT' },
-      H2: { type: PieceType.PAWN, color: 'LIGHT' },
-      A8: { type: PieceType.ROOK, color: 'DARK' },
-      B8: { type: PieceType.KNIGHT, color: 'DARK' },
-      C8: { type: PieceType.BISHOP, color: 'DARK' },
-      D8: { type: PieceType.QUEEN, color: 'DARK' },
-      E8: { type: PieceType.KING, color: 'DARK' },
-      F8: { type: PieceType.BISHOP, color: 'DARK' },
-      G8: { type: PieceType.KNIGHT, color: 'DARK' },
-      H8: { type: PieceType.ROOK, color: 'DARK' },
-      A7: { type: PieceType.PAWN, color: 'DARK' },
-      B7: { type: PieceType.PAWN, color: 'DARK' },
-      C7: { type: PieceType.PAWN, color: 'DARK' },
-      D7: { type: PieceType.PAWN, color: 'DARK' },
-      E7: { type: PieceType.PAWN, color: 'DARK' },
-      F7: { type: PieceType.PAWN, color: 'DARK' },
-      G7: { type: PieceType.PAWN, color: 'DARK' },
-      H7: { type: PieceType.PAWN, color: 'DARK' },
+      A1: { type: PieceType.ROOK, color: "LIGHT" },
+      B1: { type: PieceType.KNIGHT, color: "LIGHT" },
+      C1: { type: PieceType.BISHOP, color: "LIGHT" },
+      D1: { type: PieceType.QUEEN, color: "LIGHT" },
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      F1: { type: PieceType.BISHOP, color: "LIGHT" },
+      G1: { type: PieceType.KNIGHT, color: "LIGHT" },
+      H1: { type: PieceType.ROOK, color: "LIGHT" },
+      A2: { type: PieceType.PAWN, color: "LIGHT" },
+      B2: { type: PieceType.PAWN, color: "LIGHT" },
+      C2: { type: PieceType.PAWN, color: "LIGHT" },
+      D2: { type: PieceType.PAWN, color: "LIGHT" },
+      E2: { type: PieceType.PAWN, color: "LIGHT" },
+      F2: { type: PieceType.PAWN, color: "LIGHT" },
+      G2: { type: PieceType.PAWN, color: "LIGHT" },
+      H2: { type: PieceType.PAWN, color: "LIGHT" },
+      A8: { type: PieceType.ROOK, color: "DARK" },
+      B8: { type: PieceType.KNIGHT, color: "DARK" },
+      C8: { type: PieceType.BISHOP, color: "DARK" },
+      D8: { type: PieceType.QUEEN, color: "DARK" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      F8: { type: PieceType.BISHOP, color: "DARK" },
+      G8: { type: PieceType.KNIGHT, color: "DARK" },
+      H8: { type: PieceType.ROOK, color: "DARK" },
+      A7: { type: PieceType.PAWN, color: "DARK" },
+      B7: { type: PieceType.PAWN, color: "DARK" },
+      C7: { type: PieceType.PAWN, color: "DARK" },
+      D7: { type: PieceType.PAWN, color: "DARK" },
+      E7: { type: PieceType.PAWN, color: "DARK" },
+      F7: { type: PieceType.PAWN, color: "DARK" },
+      G7: { type: PieceType.PAWN, color: "DARK" },
+      H7: { type: PieceType.PAWN, color: "DARK" },
     });
   }
 
@@ -58,8 +58,14 @@ class Game {
   }
 
   isFinished(): boolean {
+    const pieces = this.#board.getPiecesByColor(this.#colorToMove);
+
+    const moveOptions = new Set();
+    for (let location of pieces.keys()) {
+      moveOptions.add(this.#board.getMoveOptions(location));
+    }
     const canCurrentPlayerMove =
-      !!this.#board.getPiece('B2') && this.#board.getMoveOptions('A1').size > 0;
+      !!this.#board.getPiece("B2") && moveOptions.size > 0;
     return !canCurrentPlayerMove;
   }
 
@@ -99,7 +105,7 @@ class Game {
   }
 
   private getOtherColor(color: PieceColor) {
-    return color === 'LIGHT' ? 'DARK' : 'LIGHT';
+    return color === "LIGHT" ? "DARK" : "LIGHT";
   }
 }
 
