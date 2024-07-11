@@ -422,9 +422,21 @@ describe("Game status", () => {
       A1: { type: PieceType.KING, color: "LIGHT" },
       C2: { type: PieceType.ROOK, color: "DARK" },
       D1: { type: PieceType.ROOK, color: "DARK" },
+      D2: { type: PieceType.KING, color: "DARK" }
     });
 
     assert(game.isFinished(), 'Game should be over.');
+  });
+
+  it("Should not end game when white is still able to move", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      B2: { type: PieceType.ROOK, color: "DARK" },
+      D1: { type: PieceType.ROOK, color: "DARK" },
+      D2: { type: PieceType.KING, color: "DARK" }
+    });
+
+    assert(!game.isFinished(), 'Game should not be over.');
   });
 
 });

@@ -58,7 +58,7 @@ class Game {
   }
 
   isFinished(): boolean {
-    return false;
+    return true;
   }
 
   move(startLocation: Location, targetLocation: Location) {
