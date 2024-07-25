@@ -1,34 +1,59 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import ChessBoard, { PieceType, MovementError } from "../ChessBoard";
+import ChessBoard, {
+  PieceType,
+  MovementError,
+  PieceColor,
+  Location,
+  Piece,
+  CheckError,
+  GameState,
+} from "../ChessBoard";
+import Game from "../Game";
+import { TurnError } from "../Game/Game";
+
+interface Scenario {
+  lightLocations?: Array<Location>;
+  darkLocations?: Array<Location>;
+  shouldContain?: Array<Location>;
+  shouldNotContain?: Array<Location>;
+  movingFrom: Location;
+  pieceType: PieceType;
+  movementOptionCount?: number;
+  description: string;
+}
 
 function putPiece(
   board: ChessBoard,
-  location: string,
+  location: Location,
   pieceType: PieceType,
-  color: string
+  color: PieceColor
 ) {
   board.putPiece(location, pieceType, color);
 }
 
 function createBoardWithColoredPieces(
-  lightLocations: string[],
-  darkLocations: string[],
+  lightLocations: Location[],
+  darkLocations: Location[],
   pieceType: PieceType
 ) {
   const board = new ChessBoard();
   lightLocations.forEach((lightLocation) =>
-    putPiece(board, lightLocation, pieceType, "light")
+    putPiece(board, lightLocation, pieceType, "LIGHT")
   );
   darkLocations.forEach((darkLocation) =>
-    putPiece(board, darkLocation, pieceType, "dark")
+    putPiece(board, darkLocation, pieceType, "DARK")
   );
 
   return board;
 }
 
-describe("Movement Calculations", () => {
-  [
+const createGameWithPieces = (
+  pieces: Partial<Record<Location, Piece>>
+) => new Game(pieces);
+
+describe("Board Movement", () => {
+  const boardMovementScenarios: Array<Scenario> = [
     {
       lightLocations: ["A1"],
       shouldContain: ["A2", "A8", "B1", "H1"],
@@ -198,7 +223,9 @@ describe("Movement Calculations", () => {
       description:
         "Pawn should be able to move forward two squares from the starting position",
     },
-  ].forEach(
+  ];
+
+  boardMovementScenarios.forEach(
     ({
       lightLocations = [],
       darkLocations = [],
@@ -211,11 +238,11 @@ describe("Movement Calculations", () => {
     }) =>
       it(`${description}`, () => {
         const board = createBoardWithColoredPieces(
-          lightLocations,
-          darkLocations,
+          lightLocations as Array<Location>,
+          darkLocations as Array<Location>,
           pieceType
         );
-        const actual = board.getMoveOptions(movingFrom);
+        const actual = board.getMoveOptions(movingFrom as Location);
 
         for (let containedElement of shouldContain) {
           assert(
@@ -277,4 +304,152 @@ describe("Piece Movements", () => {
   });
 });
 
-describe("Special Movements", () => {});
+const createDefaultGame = () => Game.defaultGame();
+
+describe("Turns", () => {
+  it("Black should not be allowed to start the game", () => {
+    const game = createDefaultGame();
+
+    assert.throws(
+      () => game.move("D7", "D6"),
+      TurnError,
+      "Black should not be allowed to move at the start"
+    );
+  });
+
+  it("White should be able to move at the start of the game", () => {
+    const game = createDefaultGame();
+
+    assert.doesNotThrow(
+      () => game.move("D2", "D3"),
+      TurnError,
+      "White should be able to move at the start of the game"
+    );
+  });
+
+  it("Movement should be reflected in the next turn", () => {
+    const game = createDefaultGame();
+    game.move("D2", "D3");
+
+    assert.throws(
+      () => game.move("D2", "D3"),
+      MovementError,
+      "There should be no pieces on D2"
+    );
+  });
+
+  it("Turns should be alternating", () => {
+    const game = createDefaultGame();
+
+    assert.doesNotThrow(
+      () => game.move("D2", "D3"),
+      TurnError,
+      "White should be able to move at the start of the game"
+    );
+
+    assert.doesNotThrow(
+      () => game.move("D7", "D6"),
+      TurnError,
+      "Black should be able to move in the second turn"
+    );
+
+    assert.doesNotThrow(
+      () => game.move("C2", "C3"),
+      TurnError,
+      "White should be able to move in the third turn"
+    );
+  });
+});
+
+describe("Game movement", () => {
+  it("should not let the King to move into check", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      B2: { type: PieceType.ROOK, color: "DARK" },
+    });
+
+    assert.throws(
+      () => game.move("A1", "A2"),
+      CheckError,
+      "The king should not be able to move into check"
+    );
+  });
+  it("same color should not be able to check King", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      B3: { type: PieceType.ROOK, color: "DARK" },
+      C3: { type: PieceType.KING, color: "DARK" },
+    });
+    assert.doesNotThrow(
+      () => game.move("A1", "A2"),
+      CheckError,
+      "Same color should not be able to check King"
+    );
+  });
+  it("movement with own piece should not allow discovered check", () => {
+    const game = createGameWithPieces({
+      C6: { type: PieceType.KING, color: "LIGHT" },
+      C5: { type: PieceType.ROOK, color: "LIGHT" },
+      C3: { type: PieceType.ROOK, color: "DARK" },
+    });
+    assert.throws(
+      () => game.move("C5", "D5"),
+      CheckError,
+      "Movement with own piece should not allow discovered check"
+    );
+  });
+  it("Should revert movement after trying to move into a check", () => {
+    const game = createGameWithPieces({
+      C6: { type: PieceType.KING, color: "LIGHT" },
+      C5: { type: PieceType.ROOK, color: "LIGHT" },
+      C3: { type: PieceType.ROOK, color: "DARK" },
+    });
+    assert.throws(
+      () => game.move("C5", "D5"),
+      CheckError,
+      "King should be in check"
+    );
+    assert.doesNotThrow(
+      () => game.move("C5", "C4"),
+      Error,
+      "King should be able to move after reverting the previous movement"
+    );
+  });
+});
+
+describe("Game status", () => {
+  it("Should end game with check-mate", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      C2: { type: PieceType.ROOK, color: "DARK" },
+      D1: { type: PieceType.ROOK, color: "DARK" },
+      D2: { type: PieceType.KING, color: "DARK" }
+    });
+
+    assert.strictEqual(game.getGameState(), GameState.BLACK_WON, 'Game should be over with BLACK winning');
+  });
+
+  it("Should not end game when white is still able to move", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      B2: { type: PieceType.ROOK, color: "DARK" },
+      D1: { type: PieceType.ROOK, color: "DARK" },
+      D2: { type: PieceType.KING, color: "DARK" }
+    });
+
+    assert.strictEqual(game.getGameState(), GameState.WHITE_TO_MOVE, 'Game should not be over, WHITE to move');
+  });
+
+  it("Should end game with STALEMATE", () => {
+    const game = createGameWithPieces({
+      A1: { type: PieceType.KING, color: "LIGHT" },
+      C2: { type: PieceType.ROOK, color: "DARK" },
+      B3: { type: PieceType.ROOK, color: "DARK" },
+      C3: { type: PieceType.KING, color: "DARK" }
+    });
+
+    assert.strictEqual(game.getGameState(), GameState.STALEMATE, 'Game should be over with STALEMATE');
+  });
+
+});
+

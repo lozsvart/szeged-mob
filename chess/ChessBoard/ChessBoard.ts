@@ -1,37 +1,70 @@
-import { MovementError, Piece, PieceType } from "./ChessBoard.interface";
+import {
+  Column,
+  Location,
+  MovementError,
+  Piece,
+  PieceColor,
+  PieceType,
+  Row,
+} from "./ChessBoard.interface";
 
-const rows = ["1", "2", "3", "4", "5", "6", "7", "8"];
-const columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
+const rows: Array<Row> = ["1", "2", "3", "4", "5", "6", "7", "8"];
+const columns: Array<Column> = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 class ChessBoard {
-  pieces: Map<string, Piece>;
+  #pieces: Map<Location, Piece>;
+  #piecesSnapshot: Map<Location, Piece>;
 
   constructor() {
-    this.pieces = new Map();
+    this.#pieces = new Map();
+    this.#piecesSnapshot = new Map();
+  }
+
+  snapshot() {
+    this.#piecesSnapshot = new Map(this.#pieces);
+  }
+
+  restoreSnapshot() {
+    this.#pieces = new Map(this.#piecesSnapshot);
+  }
+
+  getPiece(location: Location) {
+    return this.#pieces.get(location);
   }
 
   countPieces() {
-    return this.pieces.size;
+    return this.#pieces.size;
   }
 
-  putPiece(location: string, pieceType?: string, color?: string) {
+  getPiecesByColor(color: PieceColor) {
+    let result = new Map<Location, Piece>();
+    for (const [location, piece] of this.#pieces.entries()) {
+      if (piece.color === color) {
+        // We might need to use deep-copy instead
+        result.set(location, piece);
+      }
+    }
+    return result;
+  }
+
+  putPiece(location: Location, pieceType?: string, color?: PieceColor) {
     const piece: Piece = {
       type: pieceType || "",
-      color: color === "dark" ? "DARK" : "LIGHT",
+      color: color || "LIGHT",
     };
-    this.pieces.set(location, piece);
+    this.#pieces.set(location, piece);
   }
 
-  getMoveOptionCount(location: string) {
+  getMoveOptionCount(location: Location) {
     return this.getMoveOptions(location).size;
   }
 
-  getMoveOptions(location: string) {
-    const moveOptions = new Set();
-    const piece = this.pieces.get(location);
+  getMoveOptions(location: Location) {
+    const moveOptions = new Set<Location>();
+    const piece = this.#pieces.get(location);
     for (const row of rows) {
       for (const column of columns) {
-        const targetLocation = column + row;
+        const targetLocation = `${column}${row}` as Location;
         if (
           piece &&
           this.canPieceMoveTo(location, targetLocation, piece) &&
@@ -47,17 +80,17 @@ class ChessBoard {
     return moveOptions;
   }
 
-  movePiece(startLocation: string, targetLocation: string) {
+  movePiece(startLocation: Location, targetLocation: Location) {
     if (!this.getMoveOptions(startLocation).has(targetLocation)) {
       throw new MovementError();
     }
-    this.pieces.set(targetLocation, this.pieces.get(startLocation) as Piece);
-    this.pieces.delete(startLocation);
+    this.#pieces.set(targetLocation, this.#pieces.get(startLocation) as Piece);
+    this.#pieces.delete(startLocation);
   }
 
   private canPieceMoveTo(
-    startLocation: string,
-    targetLocation: string,
+    startLocation: Location,
+    targetLocation: Location,
     piece: Piece
   ) {
     const pieceType = piece.type;
@@ -122,25 +155,28 @@ class ChessBoard {
     return false;
   }
 
-  private toCoordinates(location: string) {
-    const [locationColumn, locationRow] = location.split("");
+  private toCoordinates(location: Location) {
+    const [locationColumn, locationRow] = location.split("") as [Column, Row];
     const columnIndex = columns.indexOf(locationColumn);
     const rowIndex = rows.indexOf(locationRow);
     return [columnIndex, rowIndex];
   }
 
-  private hasDifferentlyColoredPieces(locationA: string, locationB: string) {
-    let pieceA = this.pieces.get(locationA);
-    let pieceB = this.pieces.get(locationB);
+  private hasDifferentlyColoredPieces(
+    locationA: Location,
+    locationB: Location
+  ) {
+    let pieceA = this.#pieces.get(locationA);
+    let pieceB = this.#pieces.get(locationB);
     return pieceA?.color !== pieceB?.color;
   }
 
-  private isFieldEmpty(location: string): boolean {
-    return !this.pieces.get(location);
+  private isFieldEmpty(location: Location): boolean {
+    return !this.#pieces.get(location);
   }
 
-  private isOpenIntervalEmpty(startLocation: string, endLocation: string) {
-    let insideFields: string[] = this.getInsideFields(
+  private isOpenIntervalEmpty(startLocation: Location, endLocation: Location) {
+    let insideFields: Location[] = this.getInsideFields(
       startLocation,
       endLocation
     );
@@ -150,7 +186,10 @@ class ChessBoard {
       .reduce((acc, it) => acc && it, true);
   }
 
-  private getInsideFields(startLocation: string, endLocation: string) {
+  private getInsideFields(
+    startLocation: Location,
+    endLocation: Location
+  ): Location[] {
     const [startColumnIndex, startRowIndex] = this.toCoordinates(startLocation);
     const [endColumnIndex, endRowIndex] = this.toCoordinates(endLocation);
 
@@ -165,7 +204,7 @@ class ChessBoard {
       Math.floor(rowOffset / stepCount),
     ];
 
-    let insideFields: string[] = [];
+    let insideFields: Location[] = [];
     for (let i = 1; i < stepCount; i++) {
       const [fieldColumn, fieldRow] = [
         startColumnIndex + i * dirColumn,
