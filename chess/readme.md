@@ -9,5 +9,5 @@
 - [x] Alternating black & white movements
 - [x] Check and checkmate checking
 - [ ] Special movements (castling, en passant)
-- [ ] Use polymorphism for piece movement
 - [ ] Pawn promotion
+- [ ] Parse [algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess))
