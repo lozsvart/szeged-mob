@@ -495,4 +495,14 @@ describe("Pawn promotion", () => {
     game.move("E2", "E3");
     game.move("H1", "H8");
   });
+
+  it("Pawn can not be promoted to pawn", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B7: { type: PieceType.PAWN, color: "LIGHT" },
+    });
+
+    game.moveWithPromotion("B7", "B8", PieceType.PAWN);
+  });
 });
