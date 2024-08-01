@@ -9,6 +9,7 @@ import ChessBoard, {
 } from "../ChessBoard";
 
 export class TurnError extends Error {}
+export class PromotionError extends Error {}
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";

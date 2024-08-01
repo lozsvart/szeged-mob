@@ -10,7 +10,7 @@ import ChessBoard, {
   GameState,
 } from "../ChessBoard";
 import Game from "../Game";
-import { TurnError } from "../Game/Game";
+import { PromotionError, TurnError } from "../Game/Game";
 
 interface Scenario {
   lightLocations?: Array<Location>;
@@ -503,6 +503,10 @@ describe("Pawn promotion", () => {
       B7: { type: PieceType.PAWN, color: "LIGHT" },
     });
 
-    game.moveWithPromotion("B7", "B8", PieceType.PAWN);
+    assert.throws(
+      () => game.moveWithPromotion("B7", "B8", PieceType.PAWN),
+      PromotionError,
+      "Piece should not be promoted to pawn"
+    )
   });
 });
