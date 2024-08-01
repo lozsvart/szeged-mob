@@ -472,7 +472,16 @@ describe("Pawn promotion", () => {
     });
     game.moveWithPromotion("B7", "B8", PieceType.ROOK);
     game.move("E8", "E7");
-    game.move("B8", "B1");
+    assert.throws(
+      () => game.move("B8", "A7"),
+      MovementError,
+      "Piece should not be able to move diagonally"
+    )
+    assert.doesNotThrow(
+      () => game.move("B8", "B1"),
+      MovementError,
+      "Pawn should be promoted to a Rook"
+    );
   });
 
   it("Black pawn can be promoted when moving from rank 2 to rank 1", () => {
