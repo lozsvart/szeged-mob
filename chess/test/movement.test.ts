@@ -460,9 +460,19 @@ describe("Pawn promotion", () => {
       E1: { type: PieceType.KING, color: "LIGHT" },
       E8: { type: PieceType.KING, color: "DARK" },
       B7: { type: PieceType.PAWN, color: "LIGHT" },
-    })
+    });
     game.moveWithPromotion("B7", "B8", PieceType.ROOK);
-    game.move("E8", "E7")
+    game.move("E8", "E7");
+    game.move("B8", "B1");
+  });
+
+  it("Pawn can be promoted when moving from rank 7 to rank 8", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      H2: { type: PieceType.PAWN, color: "DARK" },
+    });
+    game.moveWithPromotion("H2", "H1", PieceType.ROOK);
   })
 
-})
+});

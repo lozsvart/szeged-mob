@@ -84,7 +84,8 @@ class Game {
   }
 
   moveWithPromotion(startLocation: Location, targetLocation: Location, promoteTo: PieceType) {
-    
+    this.move(startLocation, targetLocation);
+    this.#board.putPiece(targetLocation, promoteTo, "LIGHT")
   }
 
   private isChecked(color: PieceColor): boolean {
