@@ -462,6 +462,7 @@ describe("Pawn promotion", () => {
       B7: { type: PieceType.PAWN, color: "LIGHT" },
     })
     game.moveWithPromotion("B7", "B8", PieceType.ROOK);
+    game.move("E8", "E7")
   })
 
 })

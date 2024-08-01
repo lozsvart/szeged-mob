@@ -83,6 +83,10 @@ class Game {
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
   }
 
+  moveWithPromotion(startLocation: Location, targetLocation: Location, promoteTo: PieceType) {
+    
+  }
+
   private isChecked(color: PieceColor): boolean {
     const attackingPieces = this.#board.getPiecesByColor(
       this.getOtherColor(color)
