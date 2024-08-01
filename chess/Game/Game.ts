@@ -8,7 +8,7 @@ import ChessBoard, {
   GameState,
 } from "../ChessBoard";
 
-export class TurnError extends Error { }
+export class TurnError extends Error {}
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -60,11 +60,15 @@ class Game {
 
   getGameState(): GameState {
     if (!this.isChecked(this.#colorToMove) && this.isFinished()) {
-      return GameState.STALEMATE
+      return GameState.STALEMATE;
     } else if (this.isFinished()) {
-      return this.#colorToMove === "LIGHT" ? GameState.BLACK_WON : GameState.WHITE_WON;
+      return this.#colorToMove === "LIGHT"
+        ? GameState.BLACK_WON
+        : GameState.WHITE_WON;
     } else {
-      return this.#colorToMove === "DARK" ? GameState.BLACK_TO_MOVE : GameState.WHITE_TO_MOVE;
+      return this.#colorToMove === "DARK"
+        ? GameState.BLACK_TO_MOVE
+        : GameState.WHITE_TO_MOVE;
     }
   }
 
@@ -83,9 +87,15 @@ class Game {
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
   }
 
-  moveWithPromotion(startLocation: Location, targetLocation: Location, promoteTo: PieceType) {
+  moveWithPromotion(
+    startLocation: Location,
+    targetLocation: Location,
+    promoteTo: PieceType
+  ) {
+    const piece = this.#board.getPiece(startLocation);
+
     this.move(startLocation, targetLocation);
-    this.#board.putPiece(targetLocation, promoteTo, "LIGHT")
+    this.#board.putPiece(targetLocation, promoteTo, piece?.color);
   }
 
   private isChecked(color: PieceColor): boolean {
