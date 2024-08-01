@@ -453,3 +453,15 @@ describe("Game status", () => {
 
 });
 
+describe("Pawn promotion", () => {
+
+  it("Pawn can be promoted when moving from rank 7 to rank 8", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B7: { type: PieceType.PAWN, color: "LIGHT" },
+    })
+    game.moveWithPromotion("B7", "B8", PieceType.ROOK);
+  })
+
+})
