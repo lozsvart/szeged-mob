@@ -538,7 +538,7 @@ describe("Pawn promotion", () => {
     );
   });
 
-  it("Pawn cannot be promoted when to is last in column", () => {
+  it("Light pawn cannot be promoted when 'to' is not Rank 8", () => {
     const game = createGameWithPieces({
       E1: { type: PieceType.KING, color: "LIGHT" },
       E8: { type: PieceType.KING, color: "DARK" },
@@ -548,7 +548,7 @@ describe("Pawn promotion", () => {
     assert.throws(
       () => game.moveWithPromotion("B6", "B7", PieceType.ROOK),
       PromotionError,
-      "Queen should not be promoted to rook"
+      "Light pawn should not be promoted when 'to' is not Rank 8"
     );
   });
 });
