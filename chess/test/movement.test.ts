@@ -476,7 +476,7 @@ describe("Pawn promotion", () => {
       () => game.move("B8", "A7"),
       MovementError,
       "Piece should not be able to move diagonally"
-    )
+    );
     assert.doesNotThrow(
       () => game.move("B8", "B1"),
       MovementError,
@@ -507,7 +507,7 @@ describe("Pawn promotion", () => {
       () => game.moveWithPromotion("B7", "B8", PieceType.PAWN),
       PromotionError,
       "Piece should not be promoted to pawn"
-    )
+    );
   });
 
   it("Pawn can not be promoted to king", () => {
@@ -521,7 +521,7 @@ describe("Pawn promotion", () => {
       () => game.moveWithPromotion("B7", "B8", PieceType.KING),
       PromotionError,
       "Piece should not be promoted to king"
-    )
+    );
   });
 
   it("Queen can not be promoted", () => {
@@ -535,6 +535,20 @@ describe("Pawn promotion", () => {
       () => game.moveWithPromotion("B7", "B8", PieceType.ROOK),
       PromotionError,
       "Queen should not be promoted to rook"
-    )
+    );
+  });
+
+  it("Pawn cannot be promoted when to is last in column", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B6: { type: PieceType.PAWN, color: "LIGHT" },
+    });
+
+    assert.throws(
+      () => game.moveWithPromotion("B6", "B7", PieceType.ROOK),
+      PromotionError,
+      "Queen should not be promoted to rook"
+    );
   });
 });
