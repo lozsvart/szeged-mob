@@ -96,13 +96,7 @@ class Game {
 
     const piece = this.#board.getPiece(startLocation);
 
-    if (
-      !piece ||
-      piece.type !== PieceType.PAWN ||
-      promoteTo === PieceType.PAWN ||
-      promoteTo === PieceType.KING ||
-      this.isNotLastInRank(piece.color, targetLocation)
-    ) {
+    if (piece && !this.isValidPromotion(piece, promoteTo, targetLocation)) {
       throw new PromotionError();
     }
 
@@ -152,10 +146,18 @@ class Game {
     return moveOptions.size === 0;
   }
 
-  private isNotLastInRank(pieceColor: PieceColor, targetLocation: Location): boolean {
-    return pieceColor === "LIGHT" && targetLocation.charAt(1) !== "8" ||
-      pieceColor === "DARK" && targetLocation.charAt(1) !== "1"
+  private isValidPromotion(piece: Piece, promoteTo: PieceType, targetLocation: Location): boolean {
+    return piece.type === PieceType.PAWN &&
+      promoteTo !== PieceType.PAWN &&
+      promoteTo !== PieceType.KING &&
+      this.isLastInRank(piece.color, targetLocation)
   }
+
+  private isLastInRank(pieceColor: PieceColor, targetLocation: Location): boolean {
+    return pieceColor === "LIGHT" && targetLocation.charAt(1) === "8" ||
+      pieceColor === "DARK" && targetLocation.charAt(1) === "1"
+  }
+
 }
 
 export default Game;
