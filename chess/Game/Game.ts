@@ -8,8 +8,8 @@ import ChessBoard, {
   GameState,
 } from "../ChessBoard";
 
-export class TurnError extends Error {}
-export class PromotionError extends Error {}
+export class TurnError extends Error { }
+export class PromotionError extends Error { }
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -93,10 +93,14 @@ class Game {
     targetLocation: Location,
     promoteTo: PieceType
   ) {
-    const piece = this.#board.getPiece(startLocation);
+    if (promoteTo !== PieceType.PAWN && promoteTo !== PieceType.KING) {
+      const piece = this.#board.getPiece(startLocation);
 
-    this.move(startLocation, targetLocation);
-    this.#board.putPiece(targetLocation, promoteTo, piece?.color);
+      this.move(startLocation, targetLocation);
+      this.#board.putPiece(targetLocation, promoteTo, piece?.color);
+    } else {
+      throw new PromotionError();
+    }
   }
 
   private isChecked(color: PieceColor): boolean {

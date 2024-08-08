@@ -509,4 +509,32 @@ describe("Pawn promotion", () => {
       "Piece should not be promoted to pawn"
     )
   });
+
+  it("Pawn can not be promoted to king", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B7: { type: PieceType.PAWN, color: "LIGHT" },
+    });
+
+    assert.throws(
+      () => game.moveWithPromotion("B7", "B8", PieceType.KING),
+      PromotionError,
+      "Piece should not be promoted to king"
+    )
+  });
+
+  it("Queen can not be promoted", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B7: { type: PieceType.QUEEN, color: "LIGHT" },
+    });
+
+    assert.throws(
+      () => game.moveWithPromotion("B7", "B8", PieceType.ROOK),
+      PromotionError,
+      "Queen should not be promoted to rook"
+    )
+  });
 });
