@@ -8,8 +8,8 @@ import ChessBoard, {
   GameState,
 } from "../ChessBoard";
 
-export class TurnError extends Error {}
-export class PromotionError extends Error {}
+export class TurnError extends Error { }
+export class PromotionError extends Error { }
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -93,12 +93,12 @@ class Game {
     targetLocation: Location,
     promoteTo: PieceType
   ) {
-    
+
     const piece = this.#board.getPiece(startLocation);
-    
+
     if (
       !piece ||
-      piece?.type !== PieceType.PAWN ||
+      piece.type !== PieceType.PAWN ||
       promoteTo === PieceType.PAWN ||
       promoteTo === PieceType.KING ||
       this.isNotLastInRank(piece.color, targetLocation)
@@ -154,7 +154,7 @@ class Game {
 
   private isNotLastInRank(pieceColor: PieceColor, targetLocation: Location): boolean {
     return pieceColor === "LIGHT" && targetLocation.charAt(1) !== "8" ||
-    pieceColor === "DARK" && targetLocation.charAt(1) !== "1"
+      pieceColor === "DARK" && targetLocation.charAt(1) !== "1"
   }
 }
 
