@@ -598,5 +598,11 @@ describe("Castling", () => {
     );
 
     game.move("E8", "E7");
+
+    assert.doesNotThrow(
+      () => game.move("G1", "H1"),
+      MovementError,
+      "Light king should be able to move after castling"
+    );
   });
 });

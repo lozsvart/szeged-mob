@@ -80,8 +80,8 @@ class ChessBoard {
     return moveOptions;
   }
 
-  movePiece(startLocation: Location, targetLocation: Location) {
-    if (!this.getMoveOptions(startLocation).has(targetLocation) && !(startLocation === "E1" && targetLocation === "G1")) {
+  movePiece(startLocation: Location, targetLocation: Location, force = false as Boolean) {
+    if (!this.getMoveOptions(startLocation).has(targetLocation) && !force) {
       throw new MovementError();
     }
     this.#pieces.set(targetLocation, this.#pieces.get(startLocation) as Piece);

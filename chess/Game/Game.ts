@@ -8,8 +8,8 @@ import ChessBoard, {
   GameState,
 } from "../ChessBoard";
 
-export class TurnError extends Error {}
-export class PromotionError extends Error {}
+export class TurnError extends Error { }
+export class PromotionError extends Error { }
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -124,7 +124,7 @@ class Game {
       throw new TurnError();
     }
     if (startLocation === "E1" && targetLocation === "G1") {
-      this.#board.movePiece(startLocation, targetLocation);
+      this.#board.movePiece(startLocation, targetLocation, true);
       this.#colorToMove = this.getOtherColor(this.#colorToMove);
       return;
     }
