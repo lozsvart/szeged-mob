@@ -8,6 +8,6 @@
 - [x] Actually move pieces
 - [x] Alternating black & white movements
 - [x] Check and checkmate checking
+- [x] Pawn promotion
 - [ ] Special movements (castling, en passant)
-- [ ] Pawn promotion
 - [ ] Parse [algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess))

@@ -8,7 +8,8 @@ import ChessBoard, {
   GameState,
 } from "../ChessBoard";
 
-export class TurnError extends Error { }
+export class TurnError extends Error {}
+export class PromotionError extends Error {}
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -60,27 +61,41 @@ class Game {
 
   getGameState(): GameState {
     if (!this.isChecked(this.#colorToMove) && this.isFinished()) {
-      return GameState.STALEMATE
+      return GameState.STALEMATE;
     } else if (this.isFinished()) {
-      return this.#colorToMove === "LIGHT" ? GameState.BLACK_WON : GameState.WHITE_WON;
+      return this.#colorToMove === "LIGHT"
+        ? GameState.BLACK_WON
+        : GameState.WHITE_WON;
     } else {
-      return this.#colorToMove === "DARK" ? GameState.BLACK_TO_MOVE : GameState.WHITE_TO_MOVE;
+      return this.#colorToMove === "DARK"
+        ? GameState.BLACK_TO_MOVE
+        : GameState.WHITE_TO_MOVE;
     }
   }
 
   move(startLocation: Location, targetLocation: Location) {
     const piece = this.#board.getPiece(startLocation);
-    if (piece && this.#colorToMove !== piece?.color) {
-      throw new TurnError();
+
+    if (piece && this.isValidPromotion(piece, targetLocation)) {
+      throw new PromotionError();
     }
 
-    this.#board.snapshot();
-    this.#board.movePiece(startLocation, targetLocation);
-    if (this.isChecked(this.#colorToMove)) {
-      this.#board.restoreSnapshot();
-      throw new CheckError();
+    this.move2(startLocation, targetLocation);
+  }
+
+  moveWithPromotion(
+    startLocation: Location,
+    targetLocation: Location,
+    promoteTo: PieceType
+  ) {
+    const piece = this.#board.getPiece(startLocation);
+
+    if (piece && !this.isValidPromotion(piece, targetLocation, promoteTo)) {
+      throw new PromotionError();
     }
-    this.#colorToMove = this.getOtherColor(this.#colorToMove);
+
+    this.move2(startLocation, targetLocation);
+    this.#board.putPiece(targetLocation, promoteTo, piece?.color);
   }
 
   private isChecked(color: PieceColor): boolean {
@@ -103,6 +118,21 @@ class Game {
     return false;
   }
 
+  private move2(startLocation: Location, targetLocation: Location) {
+    const piece = this.#board.getPiece(startLocation);
+    if (piece && this.#colorToMove !== piece?.color) {
+      throw new TurnError();
+    }
+
+    this.#board.snapshot();
+    this.#board.movePiece(startLocation, targetLocation);
+    if (this.isChecked(this.#colorToMove)) {
+      this.#board.restoreSnapshot();
+      throw new CheckError();
+    }
+    this.#colorToMove = this.getOtherColor(this.#colorToMove);
+  }
+
   private getOtherColor(color: PieceColor) {
     return color === "LIGHT" ? "DARK" : "LIGHT";
   }
@@ -123,6 +153,29 @@ class Game {
       }
     }
     return moveOptions.size === 0;
+  }
+
+  private isValidPromotion(
+    piece: Piece,
+    targetLocation: Location,
+    promoteTo?: PieceType
+  ): boolean {
+    return (
+      piece.type === PieceType.PAWN &&
+      promoteTo !== PieceType.PAWN &&
+      promoteTo !== PieceType.KING &&
+      this.isLastInRank(piece.color, targetLocation)
+    );
+  }
+
+  private isLastInRank(
+    pieceColor: PieceColor,
+    targetLocation: Location
+  ): boolean {
+    return (
+      (pieceColor === "LIGHT" && targetLocation.charAt(1) === "8") ||
+      (pieceColor === "DARK" && targetLocation.charAt(1) === "1")
+    );
   }
 }
 

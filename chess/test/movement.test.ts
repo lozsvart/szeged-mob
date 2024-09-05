@@ -10,7 +10,7 @@ import ChessBoard, {
   GameState,
 } from "../ChessBoard";
 import Game from "../Game";
-import { TurnError } from "../Game/Game";
+import { PromotionError, TurnError } from "../Game/Game";
 
 interface Scenario {
   lightLocations?: Array<Location>;
@@ -48,9 +48,8 @@ function createBoardWithColoredPieces(
   return board;
 }
 
-const createGameWithPieces = (
-  pieces: Partial<Record<Location, Piece>>
-) => new Game(pieces);
+const createGameWithPieces = (pieces: Partial<Record<Location, Piece>>) =>
+  new Game(pieces);
 
 describe("Board Movement", () => {
   const boardMovementScenarios: Array<Scenario> = [
@@ -423,10 +422,14 @@ describe("Game status", () => {
       A1: { type: PieceType.KING, color: "LIGHT" },
       C2: { type: PieceType.ROOK, color: "DARK" },
       D1: { type: PieceType.ROOK, color: "DARK" },
-      D2: { type: PieceType.KING, color: "DARK" }
+      D2: { type: PieceType.KING, color: "DARK" },
     });
 
-    assert.strictEqual(game.getGameState(), GameState.BLACK_WON, 'Game should be over with BLACK winning');
+    assert.strictEqual(
+      game.getGameState(),
+      GameState.BLACK_WON,
+      "Game should be over with BLACK winning"
+    );
   });
 
   it("Should not end game when white is still able to move", () => {
@@ -434,10 +437,14 @@ describe("Game status", () => {
       A1: { type: PieceType.KING, color: "LIGHT" },
       B2: { type: PieceType.ROOK, color: "DARK" },
       D1: { type: PieceType.ROOK, color: "DARK" },
-      D2: { type: PieceType.KING, color: "DARK" }
+      D2: { type: PieceType.KING, color: "DARK" },
     });
 
-    assert.strictEqual(game.getGameState(), GameState.WHITE_TO_MOVE, 'Game should not be over, WHITE to move');
+    assert.strictEqual(
+      game.getGameState(),
+      GameState.WHITE_TO_MOVE,
+      "Game should not be over, WHITE to move"
+    );
   });
 
   it("Should end game with STALEMATE", () => {
@@ -445,11 +452,132 @@ describe("Game status", () => {
       A1: { type: PieceType.KING, color: "LIGHT" },
       C2: { type: PieceType.ROOK, color: "DARK" },
       B3: { type: PieceType.ROOK, color: "DARK" },
-      C3: { type: PieceType.KING, color: "DARK" }
+      C3: { type: PieceType.KING, color: "DARK" },
     });
 
-    assert.strictEqual(game.getGameState(), GameState.STALEMATE, 'Game should be over with STALEMATE');
+    assert.strictEqual(
+      game.getGameState(),
+      GameState.STALEMATE,
+      "Game should be over with STALEMATE"
+    );
   });
-
 });
 
+describe("Pawn promotion", () => {
+  it("Light pawn can be promoted when moving from rank 7 to rank 8", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B7: { type: PieceType.PAWN, color: "LIGHT" },
+    });
+    game.moveWithPromotion("B7", "B8", PieceType.ROOK);
+    game.move("E8", "E7");
+    assert.throws(
+      () => game.move("B8", "A7"),
+      MovementError,
+      "Piece should not be able to move diagonally"
+    );
+    assert.doesNotThrow(
+      () => game.move("B8", "B1"),
+      MovementError,
+      "Pawn should be promoted to a Rook"
+    );
+  });
+
+  it("Black pawn can be promoted when moving from rank 2 to rank 1", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      H2: { type: PieceType.PAWN, color: "DARK" },
+    });
+    game.move("E1", "E2");
+    game.moveWithPromotion("H2", "H1", PieceType.ROOK);
+    game.move("E2", "E3");
+    game.move("H1", "H8");
+  });
+
+  it("Pawn can not be promoted to pawn", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B7: { type: PieceType.PAWN, color: "LIGHT" },
+    });
+
+    assert.throws(
+      () => game.moveWithPromotion("B7", "B8", PieceType.PAWN),
+      PromotionError,
+      "Piece should not be promoted to pawn"
+    );
+  });
+
+  it("Pawn can not be promoted to king", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B7: { type: PieceType.PAWN, color: "LIGHT" },
+    });
+
+    assert.throws(
+      () => game.moveWithPromotion("B7", "B8", PieceType.KING),
+      PromotionError,
+      "Piece should not be promoted to king"
+    );
+  });
+
+  it("Queen can not be promoted", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B7: { type: PieceType.QUEEN, color: "LIGHT" },
+    });
+
+    assert.throws(
+      () => game.moveWithPromotion("B7", "B8", PieceType.ROOK),
+      PromotionError,
+      "Queen should not be promoted to rook"
+    );
+  });
+
+  it("Light pawn cannot be promoted when it is not moving to Rank 8", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      B6: { type: PieceType.PAWN, color: "LIGHT" },
+    });
+
+    assert.throws(
+      () => game.moveWithPromotion("B6", "B7", PieceType.ROOK),
+      PromotionError,
+      "Light pawn should not be promoted when it is not moving to Rank 8"
+    );
+  });
+
+  it("Light pawn cannot move without promotion when it is moving to Rank 8", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+      C7: { type: PieceType.PAWN, color: "LIGHT" },
+    });
+
+    assert.throws(
+      () => game.move("C7", "C8"),
+      PromotionError,
+      "Light pawn should not be able to move without promotion when it is moving to Rank 8"
+    );
+  });
+
+  it("Light king should be able to move to Rank 8", () => {
+    const game = createGameWithPieces({
+      A7: { type: PieceType.KING, color: "LIGHT" },
+      H7: { type: PieceType.KING, color: "DARK" },
+    });
+
+    assert.doesNotThrow(
+      () => {
+        game.move("A7", "A8");
+      },
+      PromotionError,
+      "Light king should be able to move to Rank 8"
+    );
+  });
+});
