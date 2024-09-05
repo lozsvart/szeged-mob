@@ -582,7 +582,6 @@ describe("Pawn promotion", () => {
   });
 });
 
-
 describe("Castling", () => {
   it("Light king can castle kingside", () => {
     const game = createGameWithPieces({
@@ -598,6 +597,6 @@ describe("Castling", () => {
       "Light king should be able to castle kingside"
     );
 
-    
+    game.move("E8", "E7");
   });
-})
+});
