@@ -581,3 +581,23 @@ describe("Pawn promotion", () => {
     );
   });
 });
+
+
+describe("Castling", () => {
+  it("Light king can castle kingside", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      H1: { type: PieceType.ROOK, color: "LIGHT" },
+      A1: { type: PieceType.ROOK, color: "LIGHT" },
+      E8: { type: PieceType.KING, color: "DARK" },
+    });
+
+    assert.doesNotThrow(
+      () => game.move("E1", "G1"),
+      MovementError,
+      "Light king should be able to castle kingside"
+    );
+
+    
+  });
+})
