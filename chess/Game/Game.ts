@@ -164,7 +164,11 @@ class Game {
   }
 
   private isCastlingMove(startLocation: Location, targetLocation: Location) {
-    return startLocation === "E1" && targetLocation === "G1";
+    /*if (this.#board.getPiece(startLocation)?.type !== PieceType.KING) {
+      return false;
+      // TODO uncomment when ready
+    }*/
+    return startLocation === "E1" && (targetLocation === "G1" || targetLocation == "C1");
   }
 
   private getOtherColor(color: PieceColor) {
