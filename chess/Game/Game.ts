@@ -6,6 +6,7 @@ import ChessBoard, {
   PieceColor,
   CheckError,
   GameState,
+  Movement,
 } from "../ChessBoard";
 
 export class TurnError extends Error {}
@@ -126,7 +127,7 @@ class Game {
 
     if (this.isCastlingMove(startLocation, targetLocation)) {
       this.#board.movePiece(startLocation, targetLocation, true);
-      const rookMovement: [Location, Location] = this.getCastlingRookMovement();
+      const rookMovement: [Location, Location] = this.getCastlingRookMovement([startLocation, targetLocation]);
       this.#board.movePiece(...rookMovement, true);
       this.#colorToMove = this.getOtherColor(this.#colorToMove);
       return;
@@ -141,7 +142,7 @@ class Game {
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
   }
 
-  private getCastlingRookMovement(): [Location, Location] {
+  private getCastlingRookMovement(movement: Movement): Movement {
     return ["H1", "F1"];
   }
 

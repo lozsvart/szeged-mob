@@ -2,6 +2,7 @@ export type Row = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8";
 export type Column = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H";
 
 export type Location = `${Column}${Row}`;
+export type Movement = [Location, Location];
 
 export enum PieceType {
   KNIGHT = "Knight",
