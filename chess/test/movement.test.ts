@@ -658,5 +658,6 @@ describe("Castling", () => {
   // TODO: Rook and king remained still
   // TODO: King should not pass through fields in check
   // TODO: Rook should be able to pass through fields in check
+  // TODO: Only king should be able to castle
   
 });
