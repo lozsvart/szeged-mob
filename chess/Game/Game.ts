@@ -127,7 +127,10 @@ class Game {
 
     if (this.isCastlingMove(startLocation, targetLocation)) {
       this.#board.movePiece(startLocation, targetLocation, true);
-      const rookMovement: [Location, Location] = this.getCastlingRookMovement([startLocation, targetLocation]);
+      const rookMovement: [Location, Location] = this.getCastlingRookMovement([
+        startLocation,
+        targetLocation,
+      ]);
       this.#board.movePiece(...rookMovement, true);
       this.#colorToMove = this.getOtherColor(this.#colorToMove);
       return;
@@ -142,10 +145,16 @@ class Game {
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
   }
 
-  private getCastlingRookMovement([startLocation, targetLocation]: Movement): Movement {
-    const [rookTargetLocation] = this.#board.getInsideFields(startLocation, targetLocation);
-    
-    return ["H1", rookTargetLocation];
+  private getCastlingRookMovement([
+    startLocation,
+    targetLocation,
+  ]: Movement): Movement {
+    const rookStartLocation = "H1";
+    const [rookTargetLocation] = ChessBoard.getInsideFields(
+      startLocation,
+      targetLocation
+    );
+    return [rookStartLocation, rookTargetLocation];
   }
 
   private isCastlingMove(startLocation: Location, targetLocation: Location) {

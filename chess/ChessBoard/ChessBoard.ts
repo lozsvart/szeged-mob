@@ -80,7 +80,11 @@ class ChessBoard {
     return moveOptions;
   }
 
-  movePiece(startLocation: Location, targetLocation: Location, force = false as Boolean) {
+  movePiece(
+    startLocation: Location,
+    targetLocation: Location,
+    force = false as Boolean
+  ) {
     if (!this.getMoveOptions(startLocation).has(targetLocation) && !force) {
       throw new MovementError();
     }
@@ -94,9 +98,10 @@ class ChessBoard {
     piece: Piece
   ) {
     const pieceType = piece.type;
-    const [startColumnIndex, startRowIndex] = this.toCoordinates(startLocation);
+    const [startColumnIndex, startRowIndex] =
+      ChessBoard.toCoordinates(startLocation);
     const [targetColumnIndex, targetRowIndex] =
-      this.toCoordinates(targetLocation);
+      ChessBoard.toCoordinates(targetLocation);
 
     const horizontalOffset = Math.abs(startColumnIndex - targetColumnIndex);
     const verticalOffset = Math.abs(startRowIndex - targetRowIndex);
@@ -155,7 +160,7 @@ class ChessBoard {
     return false;
   }
 
-  private toCoordinates(location: Location) {
+  static toCoordinates(location: Location) {
     const [locationColumn, locationRow] = location.split("") as [Column, Row];
     const columnIndex = columns.indexOf(locationColumn);
     const rowIndex = rows.indexOf(locationRow);
@@ -176,7 +181,7 @@ class ChessBoard {
   }
 
   private isOpenIntervalEmpty(startLocation: Location, endLocation: Location) {
-    let insideFields: Location[] = this.getInsideFields(
+    let insideFields: Location[] = ChessBoard.getInsideFields(
       startLocation,
       endLocation
     );
@@ -186,19 +191,20 @@ class ChessBoard {
       .reduce((acc, it) => acc && it, true);
   }
 
-  public getInsideFields(
+  static getInsideFields(
     startLocation: Location,
     endLocation: Location
   ): Location[] {
-    const [startColumnIndex, startRowIndex] = this.toCoordinates(startLocation);
-    const [endColumnIndex, endRowIndex] = this.toCoordinates(endLocation);
+    const [startColumnIndex, startRowIndex] =
+      ChessBoard.toCoordinates(startLocation);
+    const [endColumnIndex, endRowIndex] = ChessBoard.toCoordinates(endLocation);
 
     const [columnOffset, rowOffset] = [
       endColumnIndex - startColumnIndex,
       endRowIndex - startRowIndex,
     ];
 
-    const stepCount = this.gcd(columnOffset, rowOffset);
+    const stepCount = ChessBoard.gcd(columnOffset, rowOffset);
     const [dirColumn, dirRow] = [
       Math.floor(columnOffset / stepCount),
       Math.floor(rowOffset / stepCount),
@@ -206,17 +212,21 @@ class ChessBoard {
 
     let insideFields: Location[] = [];
     for (let i = 1; i < stepCount; i++) {
-      const [fieldColumn, fieldRow] = [
+      const coordinates: [number, number] = [
         startColumnIndex + i * dirColumn,
         startRowIndex + i * dirRow,
       ];
-      insideFields.push(`${columns[fieldColumn]}${rows[fieldRow]}`);
+      insideFields.push(ChessBoard.toLocation(coordinates));
     }
 
     return insideFields;
   }
 
-  private gcd(a: number, b: number): number {
+  static toLocation([columnIndex, rowIndex]: [number, number]): Location {
+    return `${columns[columnIndex]}${rows[rowIndex]}`;
+  }
+
+  private static gcd(a: number, b: number): number {
     let absA = Math.abs(a);
     let absB = Math.abs(b);
     if (absA === 0) {
