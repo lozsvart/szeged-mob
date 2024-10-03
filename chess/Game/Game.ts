@@ -153,8 +153,10 @@ class Game {
     const kingStartCoordinates = ChessBoard.toCoordinates(startLocation);
     const kingTargetCoordinates = ChessBoard.toCoordinates(targetLocation);
     const rookStartCoordinates: Coordinates = [
-      kingStartCoordinates[0] - kingTargetCoordinates[0] > 0 ? 0 : 7, kingStartCoordinates[1]];
-    
+      kingStartCoordinates[0] - kingTargetCoordinates[0] > 0 ? 0 : 7,
+      kingStartCoordinates[1],
+    ];
+
     const rookStartLocation = ChessBoard.toLocation(rookStartCoordinates);
     const [rookTargetLocation] = ChessBoard.getInsideFields(
       startLocation,
@@ -168,7 +170,19 @@ class Game {
       return false;
       // TODO uncomment when ready
     }*/
-    return startLocation === "E1" && (targetLocation === "G1" || targetLocation == "C1");
+
+    const [startColumnCoordinate, startRowCoordinate] =
+      ChessBoard.toCoordinates(startLocation);
+    const [targetColumnCoordinate, targetRowCoordinate] =
+      ChessBoard.toCoordinates(targetLocation);
+
+    const isHorizontalMovement = startRowCoordinate === targetRowCoordinate;
+    const isDoubleMovement =
+      Math.abs(targetColumnCoordinate - startColumnCoordinate) === 2;
+    const isFromStart = startColumnCoordinate === 4 && startRowCoordinate === 0;
+    const isLight = this.#board.getPiece(startLocation)?.color === "LIGHT";
+
+    return isHorizontalMovement && isDoubleMovement && isFromStart && isLight;
   }
 
   private getOtherColor(color: PieceColor) {
