@@ -653,5 +653,10 @@ describe("Castling", () => {
       "Dark king should be able to move after castling"
     );
   });
+
+  // TODO: Castle Dark queenside
+  // TODO: Rook and king remained still
+  // TODO: King should not pass through fields in check
+  // TODO: Rook should be able to pass through fields in check
   
 });
