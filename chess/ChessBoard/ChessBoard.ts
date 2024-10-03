@@ -186,7 +186,7 @@ class ChessBoard {
       .reduce((acc, it) => acc && it, true);
   }
 
-  private getInsideFields(
+  public getInsideFields(
     startLocation: Location,
     endLocation: Location
   ): Location[] {

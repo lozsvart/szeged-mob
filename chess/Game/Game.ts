@@ -143,7 +143,9 @@ class Game {
   }
 
   private getCastlingRookMovement([startLocation, targetLocation]: Movement): Movement {
-    return ["H1", "F1"];
+    const [rookTargetLocation] = this.#board.getInsideFields(startLocation, targetLocation);
+    
+    return ["H1", rookTargetLocation];
   }
 
   private isCastlingMove(startLocation: Location, targetLocation: Location) {
