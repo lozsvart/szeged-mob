@@ -179,10 +179,10 @@ class Game {
     const isHorizontalMovement = startRowCoordinate === targetRowCoordinate;
     const isDoubleMovement =
       Math.abs(targetColumnCoordinate - startColumnCoordinate) === 2;
-    const isFromStart = startColumnCoordinate === 4 && startRowCoordinate === 0;
     const isLight = this.#board.getPiece(startLocation)?.color === "LIGHT";
+    const isFromStart = startColumnCoordinate === 4 && isLight ? startRowCoordinate === 0 : startRowCoordinate === 7;
 
-    return isHorizontalMovement && isDoubleMovement && isFromStart && isLight;
+    return isHorizontalMovement && isDoubleMovement && isFromStart;
   }
 
   private getOtherColor(color: PieceColor) {

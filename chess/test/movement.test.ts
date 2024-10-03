@@ -628,5 +628,30 @@ describe("Castling", () => {
       "Light king should be able to move after castling"
     );
   });
+
+  it("Dark king can castle kingside", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      H8: { type: PieceType.ROOK, color: "DARK" },
+      A8: { type: PieceType.ROOK, color: "DARK" },
+      E8: { type: PieceType.KING, color: "DARK" },
+    });
+
+    game.move("E1", "E2");
+
+    assert.doesNotThrow(
+      () => game.move("E8", "G8"),
+      MovementError,
+      "Dark king should be able to castle kingside"
+    );
+
+    game.move("E2", "E3");
+
+    assert.doesNotThrow(
+      () => game.move("G8", "H8"),
+      MovementError,
+      "Dark king should be able to move after castling"
+    );
+  });
   
 });
