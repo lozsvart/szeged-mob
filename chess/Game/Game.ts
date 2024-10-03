@@ -142,7 +142,7 @@ class Game {
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
   }
 
-  private getCastlingRookMovement(movement: Movement): Movement {
+  private getCastlingRookMovement([startLocation, targetLocation]: Movement): Movement {
     return ["H1", "F1"];
   }
 
