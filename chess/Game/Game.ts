@@ -8,8 +8,8 @@ import ChessBoard, {
   GameState,
 } from "../ChessBoard";
 
-export class TurnError extends Error { }
-export class PromotionError extends Error { }
+export class TurnError extends Error {}
+export class PromotionError extends Error {}
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -123,11 +123,15 @@ class Game {
     if (piece && this.#colorToMove !== piece?.color) {
       throw new TurnError();
     }
-    if (startLocation === "E1" && targetLocation === "G1") {
+
+    if (this.isCastlingMove(startLocation, targetLocation)) {
       this.#board.movePiece(startLocation, targetLocation, true);
+      const rookMovement: [Location, Location] = this.getCastlingRookMovement();
+      this.#board.movePiece(...rookMovement, true);
       this.#colorToMove = this.getOtherColor(this.#colorToMove);
       return;
     }
+
     this.#board.snapshot();
     this.#board.movePiece(startLocation, targetLocation);
     if (this.isChecked(this.#colorToMove)) {
@@ -135,6 +139,14 @@ class Game {
       throw new CheckError();
     }
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
+  }
+
+  private getCastlingRookMovement(): [Location, Location] {
+    return ["H1", "F1"];
+  }
+
+  private isCastlingMove(startLocation: Location, targetLocation: Location) {
+    return startLocation === "E1" && targetLocation === "G1";
   }
 
   private getOtherColor(color: PieceColor) {
