@@ -149,7 +149,10 @@ class Game {
     startLocation,
     targetLocation,
   ]: Movement): Movement {
-    const rookStartLocation = "H1";
+    const kingStartCoordinates = ChessBoard.toCoordinates(startLocation);
+    const kingTargetCoordinates = ChessBoard.toCoordinates(targetLocation);
+    
+    const rookStartLocation = ChessBoard.toLocation(rookStartCoordinates);
     const [rookTargetLocation] = ChessBoard.getInsideFields(
       startLocation,
       targetLocation

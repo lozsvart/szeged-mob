@@ -1,5 +1,6 @@
 import {
   Column,
+  Coordinates,
   Location,
   MovementError,
   Piece,
@@ -160,7 +161,7 @@ class ChessBoard {
     return false;
   }
 
-  static toCoordinates(location: Location) {
+  static toCoordinates(location: Location): Coordinates {
     const [locationColumn, locationRow] = location.split("") as [Column, Row];
     const columnIndex = columns.indexOf(locationColumn);
     const rowIndex = rows.indexOf(locationRow);
@@ -212,7 +213,7 @@ class ChessBoard {
 
     let insideFields: Location[] = [];
     for (let i = 1; i < stepCount; i++) {
-      const coordinates: [number, number] = [
+      const coordinates: Coordinates = [
         startColumnIndex + i * dirColumn,
         startRowIndex + i * dirRow,
       ];
@@ -222,7 +223,7 @@ class ChessBoard {
     return insideFields;
   }
 
-  static toLocation([columnIndex, rowIndex]: [number, number]): Location {
+  static toLocation([columnIndex, rowIndex]: Coordinates): Location {
     return `${columns[columnIndex]}${rows[rowIndex]}`;
   }
 
