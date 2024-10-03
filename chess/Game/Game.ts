@@ -7,6 +7,7 @@ import ChessBoard, {
   CheckError,
   GameState,
   Movement,
+  Coordinates,
 } from "../ChessBoard";
 
 export class TurnError extends Error {}
@@ -151,6 +152,8 @@ class Game {
   ]: Movement): Movement {
     const kingStartCoordinates = ChessBoard.toCoordinates(startLocation);
     const kingTargetCoordinates = ChessBoard.toCoordinates(targetLocation);
+    const rookStartCoordinates: Coordinates = [
+      kingStartCoordinates[0] - kingTargetCoordinates[0] > 0 ? 0 : 7, kingStartCoordinates[1]];
     
     const rookStartLocation = ChessBoard.toLocation(rookStartCoordinates);
     const [rookTargetLocation] = ChessBoard.getInsideFields(
