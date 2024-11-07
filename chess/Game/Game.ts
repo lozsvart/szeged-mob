@@ -10,8 +10,8 @@ import ChessBoard, {
   Coordinates,
 } from "../ChessBoard";
 
-export class TurnError extends Error {}
-export class PromotionError extends Error {}
+export class TurnError extends Error { }
+export class PromotionError extends Error { }
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
