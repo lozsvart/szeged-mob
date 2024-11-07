@@ -10,8 +10,8 @@ import ChessBoard, {
   Coordinates,
 } from "../ChessBoard";
 
-export class TurnError extends Error { }
-export class PromotionError extends Error { }
+export class TurnError extends Error {}
+export class PromotionError extends Error {}
 
 class Game {
   #colorToMove: PieceColor = "LIGHT";
@@ -127,6 +127,8 @@ class Game {
     }
 
     if (this.isCastlingMove(startLocation, targetLocation)) {
+      if (piece && this.hasPieceMoved(piece)) {
+      }
       this.#board.movePiece(startLocation, targetLocation, true);
       const rookMovement: [Location, Location] = this.getCastlingRookMovement([
         startLocation,
@@ -144,6 +146,9 @@ class Game {
       throw new CheckError();
     }
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
+  }
+  hasPieceMoved(piece: Piece): boolean {
+    return false;
   }
 
   private getCastlingRookMovement([
@@ -180,7 +185,10 @@ class Game {
     const isDoubleMovement =
       Math.abs(targetColumnCoordinate - startColumnCoordinate) === 2;
     const isLight = this.#board.getPiece(startLocation)?.color === "LIGHT";
-    const isFromStart = startColumnCoordinate === 4 && isLight ? startRowCoordinate === 0 : startRowCoordinate === 7;
+    const isFromStart =
+      startColumnCoordinate === 4 && isLight
+        ? startRowCoordinate === 0
+        : startRowCoordinate === 7;
 
     return isHorizontalMovement && isDoubleMovement && isFromStart;
   }
