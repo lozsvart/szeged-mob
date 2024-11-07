@@ -8,6 +8,7 @@ import ChessBoard, {
   GameState,
   Movement,
   Coordinates,
+  MovementError,
 } from "../ChessBoard";
 
 export class TurnError extends Error {}
@@ -127,7 +128,8 @@ class Game {
     }
 
     if (this.isCastlingMove(startLocation, targetLocation)) {
-      if (piece && piece.hasMoved) {
+      if (piece?.hasMoved) {
+        throw new MovementError();
       }
       this.#board.movePiece(startLocation, targetLocation, true);
       const rookMovement: [Location, Location] = this.getCastlingRookMovement([
