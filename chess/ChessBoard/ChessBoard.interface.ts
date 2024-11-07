@@ -19,6 +19,7 @@ export type PieceColor = "LIGHT" | "DARK";
 export interface Piece {
   type: string;
   color: PieceColor;
+  hasMoved?: boolean;
 }
 
 export enum GameState {

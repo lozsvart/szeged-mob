@@ -89,7 +89,9 @@ class ChessBoard {
     if (!this.getMoveOptions(startLocation).has(targetLocation) && !force) {
       throw new MovementError();
     }
-    this.#pieces.set(targetLocation, this.#pieces.get(startLocation) as Piece);
+    const piece = this.#pieces.get(startLocation) as Piece;
+    piece.hasMoved = true;
+    this.#pieces.set(targetLocation, piece);
     this.#pieces.delete(startLocation);
   }
 
