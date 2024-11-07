@@ -679,6 +679,34 @@ describe("Castling", () => {
     );
   });
 
+  it.skip("King cannot castle if already moved", () => {
+    const game = createGameWithPieces({
+      E8: { type: PieceType.KING, color: "DARK" },
+      H1: { type: PieceType.ROOK, color: "LIGHT" },
+      A1: { type: PieceType.ROOK, color: "LIGHT" },
+      E1: { type: PieceType.KING, color: "LIGHT" },
+    });
+
+    game.move("E1", "D1");
+    game.move("E8", "D8");
+    game.move("D1", "E1");
+    game.move("D8", "E8");
+
+    assert.doesNotThrow(
+      () => game.move("E8", "C8"),
+      MovementError,
+      "Dark king should be able to castle queenside"
+    );
+
+    game.move("E2", "E3");
+
+    assert.doesNotThrow(
+      () => game.move("C8", "B8"),
+      MovementError,
+      "Dark king should be able to move after castling"
+    );
+  });
+
   // TODO: Rook and king remained still
   // TODO: King should not pass through fields in check
   // TODO: Rook should be able to pass through fields in check
