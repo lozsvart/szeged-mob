@@ -654,7 +654,31 @@ describe("Castling", () => {
     );
   });
 
-  // TODO: Castle Dark queenside
+  it("Dark king can castle queenside", () => {
+    const game = createGameWithPieces({
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      H8: { type: PieceType.ROOK, color: "DARK" },
+      A8: { type: PieceType.ROOK, color: "DARK" },
+      E8: { type: PieceType.KING, color: "DARK" },
+    });
+
+    game.move("E1", "E2");
+
+    assert.doesNotThrow(
+      () => game.move("E8", "C8"),
+      MovementError,
+      "Dark king should be able to castle queenside"
+    );
+
+    game.move("E2", "E3");
+
+    assert.doesNotThrow(
+      () => game.move("C8", "B8"),
+      MovementError,
+      "Dark king should be able to move after castling"
+    );
+  });
+
   // TODO: Rook and king remained still
   // TODO: King should not pass through fields in check
   // TODO: Rook should be able to pass through fields in check
