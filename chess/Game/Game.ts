@@ -134,15 +134,17 @@ class Game {
     }
 
     if (this.isCastlingMove(startLocation, targetLocation)) {
-      const king = piece;
       const rookMovement: [Location, Location] = this.getCastlingRookMovement([
         startLocation,
         targetLocation,
       ]);
-      const rook = this.#board.getPiece(rookMovement[0]);
 
       if (
-        !this.isValidCastlingMove(startLocation, targetLocation, king, rook)
+        !this.isValidCastlingMove(
+          startLocation,
+          targetLocation,
+          rookMovement[0]
+        )
       ) {
         throw new MovementError();
       }
@@ -163,17 +165,21 @@ class Game {
   }
 
   private isValidCastlingMove(
-    startLocation: Location,
-    targetLocation: Location,
-    king?: Piece,
-    rook?: Piece
+    kingStartLocation: Location,
+    kingTargetLocation: Location,
+    rookStartLocation: Location
   ) {
+    const king = this.#board.getPiece(kingStartLocation);
+    const rook = this.#board.getPiece(rookStartLocation);
+
     const passedFields = ChessBoard.getInsideFields(
-      startLocation,
-      targetLocation
+      kingStartLocation,
+      kingTargetLocation
     );
 
-    const attackedLocations = this.getAttackedLocations(this.getOtherColor(this.#colorToMove));
+    const attackedLocations = this.getAttackedLocations(
+      this.getOtherColor(this.#colorToMove)
+    );
     for (const attackedLocation of attackedLocations) {
       if (passedFields.includes(attackedLocation)) {
         return false;
@@ -203,7 +209,6 @@ class Game {
   }
 
   private isCastlingMove(startLocation: Location, targetLocation: Location) {
-
     const [startColumnCoordinate, startRowCoordinate] =
       ChessBoard.toCoordinates(startLocation);
     const [targetColumnCoordinate, targetRowCoordinate] =
@@ -214,10 +219,8 @@ class Game {
       Math.abs(targetColumnCoordinate - startColumnCoordinate) === 2;
     const isLight = this.#board.getPiece(startLocation)?.color === "LIGHT";
     const isFromStart =
-      startColumnCoordinate === 4 && 
-      (isLight
-        ? startRowCoordinate === 0
-        : startRowCoordinate === 7);
+      startColumnCoordinate === 4 &&
+      (isLight ? startRowCoordinate === 0 : startRowCoordinate === 7);
 
     return isHorizontalMovement && isDoubleMovement && isFromStart;
   }

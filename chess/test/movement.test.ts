@@ -747,7 +747,7 @@ describe("Castling", () => {
     assert.doesNotThrow(
       () => game.move("E1", "C1"),
       "Light king should be able to castle, even if the Rook passes through a checked field."
-    )
+    );
   });
 
   it.skip("Castling should only be possible when there are no pieces betwene the King and the Rook", () => {
@@ -761,10 +761,10 @@ describe("Castling", () => {
 
     assert.throws(
       () => game.move("E1", "G1"),
+      MovementError,
       "King should not be able to jump over a piece while castling."
-    )
+    );
   });
 
   // TODO: King should not be able move into chekc while castling
-
 });
