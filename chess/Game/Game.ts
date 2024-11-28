@@ -203,10 +203,6 @@ class Game {
   }
 
   private isCastlingMove(startLocation: Location, targetLocation: Location) {
-    /*if (this.#board.getPiece(startLocation)?.type !== PieceType.KING) {
-      return false;
-      // TODO uncomment when ready
-    }*/
 
     const [startColumnCoordinate, startRowCoordinate] =
       ChessBoard.toCoordinates(startLocation);
@@ -218,9 +214,10 @@ class Game {
       Math.abs(targetColumnCoordinate - startColumnCoordinate) === 2;
     const isLight = this.#board.getPiece(startLocation)?.color === "LIGHT";
     const isFromStart =
-      startColumnCoordinate === 4 && isLight
+      startColumnCoordinate === 4 && 
+      (isLight
         ? startRowCoordinate === 0
-        : startRowCoordinate === 7;
+        : startRowCoordinate === 7);
 
     return isHorizontalMovement && isDoubleMovement && isFromStart;
   }

@@ -750,18 +750,21 @@ describe("Castling", () => {
     )
   });
 
-  it.skip("Only king should be able to castle", () => {
+  it.skip("Castling should only be possible when there are no pieces betwene the King and the Rook", () => {
     const game = createGameWithPieces({
       E8: { type: PieceType.KING, color: "DARK" },
-      E1: { type: PieceType.ROOK, color: "LIGHT" },
+      H1: { type: PieceType.ROOK, color: "LIGHT" },
       A1: { type: PieceType.ROOK, color: "LIGHT" },
-      H1: { type: PieceType.KING, color: "LIGHT" },
-      B8: { type: PieceType.ROOK, color: "DARK" },
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      F1: { type: PieceType.BISHOP, color: "LIGHT" },
     });
 
-    game.move("E1", "C1")
-    // TODO other pieces should not be moved
-    
+    assert.throws(
+      () => game.move("E1", "G1"),
+      "King should not be able to jump over a piece while castling."
+    )
   });
+
+  // TODO: King should not be able move into chekc while castling
 
 });
