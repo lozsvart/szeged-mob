@@ -177,6 +177,16 @@ class Game {
       kingTargetLocation
     );
 
+    const insideFields = ChessBoard.getInsideFields(
+      kingStartLocation,
+      rookStartLocation
+    );
+    for (const insideField of insideFields) {
+      if (!this.#board.isFieldEmpty(insideField)) {
+        return false;
+      }
+    }
+
     const attackedLocations = this.getAttackedLocations(
       this.getOtherColor(this.#colorToMove)
     );

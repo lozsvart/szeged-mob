@@ -179,7 +179,7 @@ class ChessBoard {
     return pieceA?.color !== pieceB?.color;
   }
 
-  private isFieldEmpty(location: Location): boolean {
+  public isFieldEmpty(location: Location): boolean {
     return !this.#pieces.get(location);
   }
 
