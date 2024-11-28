@@ -135,7 +135,7 @@ class Game {
       ]);
       const rook = this.#board.getPiece(rookMovement[0]);
 
-      if (!this.isValidCastlingMove(king, rook)) {
+      if (!this.isValidCastlingMove(startLocation, targetLocation, king, rook)) {
         throw new MovementError();
       }
 
@@ -154,7 +154,7 @@ class Game {
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
   }
 
-  private isValidCastlingMove(king?: Piece, rook?: Piece) {
+  private isValidCastlingMove(startLocation: Location, targetLocation: Location, king?: Piece, rook?: Piece) {
     return !king?.hasMoved && !rook?.hasMoved;
   }
 

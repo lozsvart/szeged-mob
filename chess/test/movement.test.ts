@@ -719,7 +719,22 @@ describe("Castling", () => {
     );
   });
 
-  // TODO: Rook and king remained still
+  it.skip("King should not pass through fields in check", () => {
+    const game = createGameWithPieces({
+      E8: { type: PieceType.KING, color: "DARK" },
+      H1: { type: PieceType.ROOK, color: "LIGHT" },
+      A1: { type: PieceType.ROOK, color: "LIGHT" },
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      F8: { type: PieceType.ROOK, color: "DARK" },
+    });
+
+    assert.throws(
+      () => game.move("E1", "G1"),
+      MovementError,
+      "Light king shouldn't be able to castle, because the King would pass through fields in check."
+    );
+  });
+
   // TODO: King should not pass through fields in check
   // TODO: Rook should be able to pass through fields in check
   // TODO: Only king should be able to castle
