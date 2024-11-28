@@ -173,7 +173,12 @@ class Game {
       targetLocation
     );
 
-    this.getAttackedLocations(this.getOtherColor(this.#colorToMove));
+    const attackedLocations = this.getAttackedLocations(this.getOtherColor(this.#colorToMove));
+    for (const attackedLocation of attackedLocations) {
+      if (passedFields.includes(attackedLocation)) {
+        return false;
+      }
+    }
 
     return !king?.hasMoved && !rook?.hasMoved;
   }

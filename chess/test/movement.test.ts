@@ -719,7 +719,7 @@ describe("Castling", () => {
     );
   });
 
-  it.skip("King should not pass through fields in check", () => {
+  it("King should not pass through fields in check", () => {
     const game = createGameWithPieces({
       E8: { type: PieceType.KING, color: "DARK" },
       H1: { type: PieceType.ROOK, color: "LIGHT" },
@@ -735,7 +735,33 @@ describe("Castling", () => {
     );
   });
 
-  // TODO: King should not pass through fields in check
-  // TODO: Rook should be able to pass through fields in check
-  // TODO: Only king should be able to castle
+  it("Rook should be able to pass through fields in check", () => {
+    const game = createGameWithPieces({
+      E8: { type: PieceType.KING, color: "DARK" },
+      H1: { type: PieceType.ROOK, color: "LIGHT" },
+      A1: { type: PieceType.ROOK, color: "LIGHT" },
+      E1: { type: PieceType.KING, color: "LIGHT" },
+      B8: { type: PieceType.ROOK, color: "DARK" },
+    });
+
+    assert.doesNotThrow(
+      () => game.move("E1", "C1"),
+      "Light king should be able to castle, even if the Rook passes through a checked field."
+    )
+  });
+
+  it.skip("Only king should be able to castle", () => {
+    const game = createGameWithPieces({
+      E8: { type: PieceType.KING, color: "DARK" },
+      E1: { type: PieceType.ROOK, color: "LIGHT" },
+      A1: { type: PieceType.ROOK, color: "LIGHT" },
+      H1: { type: PieceType.KING, color: "LIGHT" },
+      B8: { type: PieceType.ROOK, color: "DARK" },
+    });
+
+    game.move("E1", "C1")
+    // TODO other pieces should not be moved
+    
+  });
+
 });
