@@ -128,8 +128,8 @@ class Game {
     }
 
     if (this.isCastlingMove(startLocation, targetLocation)) {
-      if (piece?.hasMoved) {
-        throw new MovementError();
+      if (!this.isValidCastlingMove(piece)) {
+          throw new MovementError();
       }
       this.#board.movePiece(startLocation, targetLocation, true);
       const rookMovement: [Location, Location] = this.getCastlingRookMovement([
@@ -148,6 +148,10 @@ class Game {
       throw new CheckError();
     }
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
+  }
+
+  private isValidCastlingMove(piece?: Piece) {
+    return !piece?.hasMoved;
   }
 
   private getCastlingRookMovement([
