@@ -176,15 +176,9 @@ class Game {
       kingStartLocation,
       kingTargetLocation
     );
-
-    const insideFields = ChessBoard.getInsideFields(
-      kingStartLocation,
-      rookStartLocation
-    );
-    for (const insideField of insideFields) {
-      if (!this.#board.isFieldEmpty(insideField)) {
-        return false;
-      }
+    
+    if (!this.#board.isOpenIntervalEmpty(kingStartLocation, rookStartLocation)){
+      return false
     }
 
     const attackedLocations = this.getAttackedLocations(

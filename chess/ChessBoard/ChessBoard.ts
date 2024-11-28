@@ -179,11 +179,11 @@ class ChessBoard {
     return pieceA?.color !== pieceB?.color;
   }
 
-  public isFieldEmpty(location: Location): boolean {
+  private isFieldEmpty(location: Location): boolean {
     return !this.#pieces.get(location);
   }
 
-  private isOpenIntervalEmpty(startLocation: Location, endLocation: Location) {
+  public isOpenIntervalEmpty(startLocation: Location, endLocation: Location) {
     let insideFields: Location[] = ChessBoard.getInsideFields(
       startLocation,
       endLocation

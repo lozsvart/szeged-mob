@@ -750,7 +750,7 @@ describe("Castling", () => {
     );
   });
 
-  it("Castling should only be possible when there are no pieces betwene the King and the Rook", () => {
+  it("Castling should only be possible when there are no pieces between the King and the Rook", () => {
     const game = createGameWithPieces({
       E8: { type: PieceType.KING, color: "DARK" },
       H1: { type: PieceType.ROOK, color: "LIGHT" },
