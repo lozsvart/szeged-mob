@@ -102,15 +102,9 @@ class Game {
   }
 
   private isChecked(color: PieceColor): boolean {
-    const attackingPieces = this.#board.getPiecesByColor(
+    let locationsUnderAttack: Set<Location> = this.getAttackedLocations(
       this.getOtherColor(color)
     );
-
-    let locationsUnderAttack: Set<Location> = new Set<Location>();
-    for (const [location] of attackingPieces.entries()) {
-      for (const moveOptionLocation of this.#board.getMoveOptions(location))
-        locationsUnderAttack.add(moveOptionLocation);
-    }
 
     for (const locationUnderAttack of locationsUnderAttack) {
       if (this.#board.getPiece(locationUnderAttack)?.type === PieceType.KING) {
@@ -119,6 +113,18 @@ class Game {
     }
 
     return false;
+  }
+
+  private getAttackedLocations(color: PieceColor) {
+    const attackingPieces = this.#board.getPiecesByColor(color);
+
+    let locationsUnderAttack: Set<Location> = new Set<Location>();
+    for (const [location] of attackingPieces.entries()) {
+      for (const moveOptionLocation of this.#board.getMoveOptions(location))
+        locationsUnderAttack.add(moveOptionLocation);
+    }
+
+    return locationsUnderAttack;
   }
 
   private move2(startLocation: Location, targetLocation: Location) {
@@ -135,7 +141,9 @@ class Game {
       ]);
       const rook = this.#board.getPiece(rookMovement[0]);
 
-      if (!this.isValidCastlingMove(startLocation, targetLocation, king, rook)) {
+      if (
+        !this.isValidCastlingMove(startLocation, targetLocation, king, rook)
+      ) {
         throw new MovementError();
       }
 
@@ -154,7 +162,19 @@ class Game {
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
   }
 
-  private isValidCastlingMove(startLocation: Location, targetLocation: Location, king?: Piece, rook?: Piece) {
+  private isValidCastlingMove(
+    startLocation: Location,
+    targetLocation: Location,
+    king?: Piece,
+    rook?: Piece
+  ) {
+    const passedFields = ChessBoard.getInsideFields(
+      startLocation,
+      targetLocation
+    );
+
+    this.getAttackedLocations(this.getOtherColor(this.#colorToMove));
+
     return !king?.hasMoved && !rook?.hasMoved;
   }
 
