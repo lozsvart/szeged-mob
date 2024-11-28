@@ -128,14 +128,18 @@ class Game {
     }
 
     if (this.isCastlingMove(startLocation, targetLocation)) {
-      if (!this.isValidCastlingMove(piece)) {
-          throw new MovementError();
-      }
-      this.#board.movePiece(startLocation, targetLocation, true);
+      const king = piece;
       const rookMovement: [Location, Location] = this.getCastlingRookMovement([
         startLocation,
         targetLocation,
       ]);
+      const rook = this.#board.getPiece(rookMovement[0]);
+
+      if (!this.isValidCastlingMove(king, rook)) {
+        throw new MovementError();
+      }
+
+      this.#board.movePiece(startLocation, targetLocation, true);
       this.#board.movePiece(...rookMovement, true);
       this.#colorToMove = this.getOtherColor(this.#colorToMove);
       return;
@@ -150,8 +154,8 @@ class Game {
     this.#colorToMove = this.getOtherColor(this.#colorToMove);
   }
 
-  private isValidCastlingMove(piece?: Piece) {
-    return !piece?.hasMoved;
+  private isValidCastlingMove(king?: Piece, rook?: Piece) {
+    return !king?.hasMoved && !rook?.hasMoved;
   }
 
   private getCastlingRookMovement([
