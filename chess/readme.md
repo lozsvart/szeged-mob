@@ -1,15 +1,6 @@
-## To do
+### Chess variants:
 
-- [x] List possible movement options for rook
-- [x] Refactor tests: add utility methods, make them parameterized
-- [x] Add other types of pieces
-- [x] Unionize movement tests
-- [x] Pawn movement (opening / capture)
-- [x] Actually move pieces
-- [x] Alternating black & white movements
-- [x] Check and checkmate checking
-- [x] Pawn promotion
-- [ ] Special movements
-    - [ ] Castling
-    - [ ] En passant
-- [ ] Parse [algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess))
+- [Long chess](https://youtube.com/shorts/ilpOtk_gkKg?si=I2aGc5KjVGrWJPGI)
+- [Hidden identity chess](https://youtube.com/shorts/nzrES4kASbY?si=ecbacWHtTAAz8sFo)
+- [3rd millenium chess](https://youtube.com/shorts/iw3gVRfjVos?si=bof-koI5wkpnZqJr)
+- [Chess twist](https://youtu.be/j-V2GlVBaw8?si=_Ebw5TDDVpkMuso2)
